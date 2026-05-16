@@ -64,16 +64,16 @@ function login() {
     fd.append("password", password);
 
     fetch("login.php", { method: "POST", body: fd, credentials: "include" })
-        .then(r => r.text())
+        .then(r => r.json())
         .then(data => {
-            if (data.trim() === "success") {
+            if (data.success) {
                 localStorage.setItem("isLoggedIn", "true");
                 closePopups();
                 updateNavbar();
                 // Notify page-specific scripts
                 document.dispatchEvent(new Event("auth:loggedIn"));
             } else {
-                alert(data);
+                alert(data.message || "Login failed. Please check your credentials.");
             }
         })
         .catch(console.error);
@@ -91,15 +91,15 @@ function signup() {
     fd.append("password", password);
 
     fetch("signup.php", { method: "POST", body: fd, credentials: "include" })
-        .then(r => r.text())
+        .then(r => r.json())
         .then(data => {
-            if (data.trim() === "success") {
+            if (data.success) {
                 localStorage.setItem("isLoggedIn", "true");
                 closePopups();
                 updateNavbar();
                 document.dispatchEvent(new Event("auth:loggedIn"));
             } else {
-                alert(data);
+                alert(data.message || "Signup failed. That username may already be taken.");
             }
         })
         .catch(console.error);
@@ -116,7 +116,7 @@ function logout() {
 
 // ── Session Check on Every Page Load ─────────
 document.addEventListener("DOMContentLoaded", function () {
-    fetch("Check_session.php", { credentials: "include" })
+    fetch("check_session.php", { credentials: "include" })
         .then(r => r.json())
         .then(data => {
             if (data.isLoggedIn) {

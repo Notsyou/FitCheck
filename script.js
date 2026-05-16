@@ -7,6 +7,7 @@
 
 // ── Global State ──────────────────────────────
 let myClosetItems    = [];
+let savedOutfits     = [];   // In-memory cache — mirrors DB, updated instantly on save/delete
 let activeVibeFilter = "All";
 let uploadedFileHold = null;
 
@@ -41,7 +42,7 @@ function showLoginFromLock()  { showLogin();  }
 function showSignupFromLock() { showSignup(); }
 
 function logout() {
-    fetch("logout.php", { credentials: "include" })
+    fetch("Logout.php", { credentials: "include" })
     .then(() => {
         localStorage.removeItem("isLoggedIn");
         alert("Logged out successfully! See you next time. 👋");
@@ -98,16 +99,16 @@ function login() {
     formData.append("password", password);
 
     fetch("login.php", { method: "POST", body: formData, credentials: "include" })
-    .then(response => response.text())
+    .then(response => response.json())
     .then(data => {
-        if (data.trim() === "success") {
+        if (data.success) {
             alert("Login Successful! ✨");
             closePopups();
             localStorage.setItem("isLoggedIn", "true");
             updateNavbar();
             loadClosetItems();
         } else {
-            alert(data);
+            alert(data.message || "Login failed. Please check your credentials.");
         }
     })
     .catch(error => console.error(error));
@@ -127,16 +128,16 @@ function signup() {
     formData.append("password", password);
 
     fetch("signup.php", { method: "POST", body: formData, credentials: "include" })
-    .then(response => response.text())
+    .then(response => response.json())
     .then(data => {
-        if (data.trim() === "success") {
+        if (data.success) {
             alert("Account Created Successfully! Welcome. 💖");
             closePopups();
             localStorage.setItem("isLoggedIn", "true");
             updateNavbar();
             loadClosetItems();
         } else {
-            alert(data);
+            alert(data.message || "Signup failed. That username may already be taken.");
         }
     })
     .catch(error => console.error(error));
@@ -478,27 +479,44 @@ function randomizeSingleSlot(type) {
 
 // ── Heart Save & Custom Outfit Naming ──────────
 function saveCurrentOutfit() {
-    // 1. Verify that the user has actually thrown at least one component into the generator
     const hasItem = SLOT_TYPES.some(t => generatorState[t] !== null);
     if (!hasItem) {
         alert("Add at least one piece to your outfit before saving! 💕");
         return;
     }
+    // Open the custom naming modal instead of the native browser prompt
+    const modal = document.getElementById("saveOutfitModal");
+    const input = document.getElementById("outfitNameInput");
+    if (modal) {
+        input.value = "";
+        modal.style.display = "flex";
+        setTimeout(() => input.focus(), 50);
+    }
+}
 
-    // 2. Open a clean input prompt to let the user name their fit style
-    let outfitName = prompt("Give your custom outfit a name so you remember it! ✨", "Casual Chic");
-    
-    // Safety check: If the user hits 'Cancel' or leaves the line entirely blank, abort the upload
-    if (outfitName === null) return; // User canceled
-    outfitName = outfitName.trim();
-    if (outfitName === "") {
-        alert("Outfit name cannot be empty! Please try again. 💭");
+function closeSaveOutfitModal() {
+    const modal = document.getElementById("saveOutfitModal");
+    if (modal) modal.style.display = "none";
+}
+
+function confirmSaveOutfit() {
+    const input = document.getElementById("outfitNameInput");
+    const outfitName = input ? input.value.trim() : "";
+
+    if (!outfitName) {
+        input.style.borderColor = "#ff82b4";
+        input.placeholder = "Please enter a name first! 💭";
+        setTimeout(() => {
+            input.style.borderColor = "";
+            input.placeholder = "e.g. Casual Chic, Date Night...";
+        }, 2000);
         return;
     }
 
-    // 3. Assemble the relational database mapping payload
+    closeSaveOutfitModal();
+
     const payload = {
-        label:          outfitName, // Pass the custom input name cleanly down the wire
+        label:          outfitName,
         hat_id:         generatorState.hat?.id         ?? null,
         top_id:         generatorState.top?.id         ?? null,
         bottom_id:      generatorState.bottom?.id      ?? null,
@@ -506,7 +524,6 @@ function saveCurrentOutfit() {
         footwear_id:    generatorState.footwear?.id    ?? null,
     };
 
-    // 4. Dispatch the payload to your backend endpoints
     fetch("save_outfit.php", {
         method:      "POST",
         credentials: "include",
@@ -516,8 +533,30 @@ function saveCurrentOutfit() {
     .then(r => r.json())
     .then(data => {
         if (data.success) {
-            triggerHeartPop(); // Fires your cute visual scaling animation effect
-            loadSavedOutfits(); // Instantly updates the right sidebar grid live without refreshing!
+            triggerHeartPop();
+
+            // ── Instant update: same pattern as the generator ──
+            // Build a local outfit object from generatorState and push
+            // it into the in-memory array, then re-render directly —
+            // no second fetch() needed, no race condition with the DB.
+            const newOutfit = {
+                id:                data.outfit_id,
+                label:             outfitName,
+                hat_id:            generatorState.hat?.id              ?? null,
+                top_id:            generatorState.top?.id              ?? null,
+                bottom_id:         generatorState.bottom?.id           ?? null,
+                accessories_id:    generatorState.accessories?.id      ?? null,
+                footwear_id:       generatorState.footwear?.id         ?? null,
+                hat_image:         generatorState.hat?.image_path         ?? null,
+                top_image:         generatorState.top?.image_path         ?? null,
+                bottom_image:      generatorState.bottom?.image_path      ?? null,
+                accessories_image: generatorState.accessories?.image_path ?? null,
+                footwear_image:    generatorState.footwear?.image_path    ?? null,
+            };
+
+            // Prepend so newest appears first (matches DB ORDER BY created_at DESC)
+            savedOutfits.unshift(newOutfit);
+            renderSavedOutfits(savedOutfits);
         } else {
             alert("Could not save outfit: " + (data.message || "Unknown error"));
         }
@@ -530,7 +569,10 @@ function loadSavedOutfits() {
     fetch("get_saved_outfits.php", { credentials: "include" })
         .then(r => r.json())
         .then(outfits => {
-            if (!outfits.error) renderSavedOutfits(outfits);
+            if (!outfits.error) {
+                savedOutfits = outfits; // Sync in-memory cache with DB
+                renderSavedOutfits(savedOutfits);
+            }
         })
         .catch(console.error);
 }

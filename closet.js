@@ -111,7 +111,7 @@ function signup() {
 }
 
 function logout() {
-    fetch("logout.php", { credentials: "include" })
+    fetch("Logout.php", { credentials: "include" })
         .then(() => {
             localStorage.removeItem("isLoggedIn");
             window.location.href = "home.html";

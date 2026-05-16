@@ -14,6 +14,7 @@ COPY . /var/www/html/
 
 # Create the stored_images directory and give Apache write permission
 RUN mkdir -p /var/www/html/stored_images \
-    && chown -R www-data:www-data /var/www/html/stored_images
-
+    && chown -R www-data:www-data /var/www/html/stored_images \
+    && chmod -R 775 /var/www/html/stored_images
+    
 EXPOSE 80

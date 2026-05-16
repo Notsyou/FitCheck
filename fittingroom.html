@@ -98,6 +98,17 @@
   </div>
 </div>
 
+  <!-- ── Save Outfit Modal ─────────────────────── -->
+  <div class="form-container" id="saveOutfitModal" style="display:none;">
+    <div class="form-box" style="max-width:360px; gap:12px;">
+      <h2>name your fit ✨</h2>
+      <p>Give this outfit a name so you remember it!</p>
+      <input type="text" id="outfitNameInput" class="form-input" placeholder="e.g. Casual Chic, Date Night..." maxlength="60" onkeydown="if(event.key==='Enter') confirmSaveOutfit();" />
+      <button type="button" class="form-submit-btn" onclick="confirmSaveOutfit()">SAVE OUTFIT 💖</button>
+      <button type="button" class="form-close-btn" onclick="closeSaveOutfitModal()">✕</button>
+    </div>
+  </div>
+
   <div id="loginContainer" class="form-container">
     <div class="form-box">
         <h2>Login</h2>
@@ -345,7 +356,10 @@
         </div>
 
         <div class="card">
-          <div class="section-title">♡ SAVED OUTFITS</div>
+          <div class="section-title" style="display:flex; align-items:center; justify-content:space-between;">
+            <span>♡ SAVED OUTFITS</span>
+            <button type="button" onclick="loadSavedOutfits()" title="Refresh saved outfits" style="background:none; border:none; cursor:pointer; font-size:14px; color:#ff82b4; padding:2px 6px; border-radius:6px; transition:transform 0.2s;" onmouseover="this.style.transform='rotate(180deg)'" onmouseout="this.style.transform='rotate(0deg)'">↻</button>
+          </div>
           
           <div class="saved-grid" id="savedOutfitsGrid">
               </div>
