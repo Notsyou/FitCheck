@@ -1,10 +1,10 @@
 <?php
 // ==========================================================================
-// api/delete_outfit.php — BACKEND DATA PURGE PROCESSOR
+// delete_outfit.php — BACKEND DATA PURGE PROCESSOR
 // ==========================================================================
+session_start();
 header('Content-Type: application/json');
 include 'db_connect.php';
-session_start();
 
 // Ensure the user is authenticated before dropping records
 if (!isset($_SESSION['user_id'])) {

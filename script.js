@@ -554,8 +554,8 @@ function renderSavedOutfits(outfits) {
 
         const safeOutfitJson = btoa(JSON.stringify(outfit));
 
-        // ✨ UPDATE: Added the .delete-saved-btn inside the card structure
-        // event.stopPropagation() is crucial here so clicking delete doesn't load the outfit into the generator!
+        // 🔥 THE FIX: We are explicitly injecting the HTML button node directly into the template string!
+        // event.stopPropagation() is crucial here so clicking '×' deletes the item instead of loading it into the generator.
         finalHtml += `
             <div class="saved-card-new" onclick="loadSavedOutfitToGenerator('${safeOutfitJson}')" style="cursor: pointer; position: relative;">
                 <button class="delete-saved-btn" onclick="confirmDeleteSavedOutfit(${outfit.id}, '${outfit.label.replace(/'/g, "\\'")}', event)" title="Delete Outfit">×</button>
@@ -568,7 +568,7 @@ function renderSavedOutfits(outfits) {
         `;
     });
 
-    // Keep your exact dynamic placeholder filler code right below here unchanged...
+    // Keep the rest of your dynamic placeholder empty cards code block right below here unchanged...
     const totalSlotsNeeded = 6;
     const currentOutfitsCount = displayedOutfits.length;
     if (currentOutfitsCount < totalSlotsNeeded) {
@@ -602,7 +602,7 @@ function confirmDeleteSavedOutfit(outfitId, outfitLabel, event) {
     const formData = new FormData();
     formData.append("outfit_id", outfitId);
 
-    fetch("api/delete_outfit.php", {
+    fetch("delete_outfit.php", {
         method: "POST",
         body: formData,
         credentials: "include"

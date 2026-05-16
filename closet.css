@@ -1,0 +1,482 @@
+/* =============================================
+   closet.css — My Closet Page Styles
+   Extends styles.css. All classes scoped to
+   the closet dashboard layout and components.
+   ============================================= */
+
+
+/* ── Page Hero Title ──────────────────────────── */
+.closet-hero {
+    text-align: center;
+    margin: 10px 0 28px;
+  }
+  
+  .closet-hero h1 {
+    font-size: 62px;
+    font-weight: 900;
+    line-height: 1;
+    color: #ff73a8;
+    letter-spacing: -1px;
+  }
+  
+  .closet-hero p {
+    font-size: 16px;
+    color: #b0a0a8;
+    margin-top: 6px;
+    font-style: italic;
+  }
+  
+  
+  /* ── Split-Screen Dashboard ───────────────────── */
+  .closet-dashboard {
+    display: grid;
+    grid-template-columns: 340px 1fr;
+    gap: 20px;
+    align-items: flex-start;
+    width: 100%;
+  }
+  
+  
+  /* ── LEFT PANEL: Avatar Viewport ─────────────── */
+  .closet-viewport-panel {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    position: sticky;
+    top: 24px; /* Stays anchored as the right grid scrolls */
+  }
+  
+  .viewport-header {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+  
+  .viewport-subtitle {
+    font-size: 12px;
+    color: #b0a0a8;
+    font-style: italic;
+    padding-left: 2px;
+  }
+  
+  /* The main framing box for the avatar */
+  .avatar-frame {
+    background: white;
+    border: 2px solid #eee2dc;
+    border-radius: 24px;
+    min-height: 480px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    position: relative;
+    padding: 16px 12px;
+    box-shadow: 0 4px 16px rgba(255, 115, 168, 0.05);
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+  }
+  
+  .avatar-frame:has(.avatar-slot-filled) {
+    border-color: #ffd6e4;
+    box-shadow: 0 6px 24px rgba(255, 115, 168, 0.1);
+  }
+  
+  /* ── Idle state ── */
+  .avatar-idle {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    color: #ccc;
+    text-align: center;
+  }
+  
+  .avatar-idle-icon {
+    font-size: 52px;
+    opacity: 0.5;
+  }
+  
+  .avatar-idle p {
+    font-size: 13px;
+    color: #bbb;
+    font-style: italic;
+    line-height: 1.5;
+  }
+  
+  /* ── Layered pieces stack ── */
+  .avatar-layers {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    width: 100%;
+    align-items: center;
+  }
+  
+  @keyframes avatarFadeIn {
+    from { opacity: 0; transform: translateY(6px); }
+    to   { opacity: 1; transform: translateY(0);   }
+  }
+  
+  .avatar-fade-in {
+    animation: avatarFadeIn 0.3s ease forwards;
+  }
+  
+  /* Individual piece row */
+  .avatar-slot {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+    background: #faf6f3;
+    border: 1.5px solid #eee2dc;
+    border-radius: 14px;
+    padding: 8px 12px;
+    transition: border-color 0.2s ease, background 0.2s ease;
+  }
+  
+  .avatar-slot.avatar-slot-filled {
+    background: #fff8fb;
+    border-color: #ffd6e4;
+  }
+  
+  .avatar-slot.avatar-slot-empty {
+    opacity: 0.35;
+    filter: grayscale(1);
+  }
+  
+  .avatar-piece-img {
+    width: 56px;
+    height: 56px;
+    object-fit: cover;
+    border-radius: 10px;
+    border: 1px solid #f0e6df;
+    background: white;
+    flex-shrink: 0;
+  }
+  
+  .avatar-slot-label {
+    font-size: 10px;
+    font-weight: 800;
+    color: #ff82b4;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+  
+  /* ── Viewport meta footer ── */
+  .viewport-meta {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    background: white;
+    border: 1px solid #eee2dc;
+    border-radius: 14px;
+    padding: 12px 14px;
+  }
+  
+  .viewport-outfit-name {
+    font-size: 13px;
+    font-weight: 800;
+    color: #444;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 160px;
+  }
+  
+  .viewport-load-btn {
+    font-size: 11px;
+    font-weight: 700;
+    color: white;
+    background: #ff73a8;
+    border: none;
+    border-radius: 10px;
+    padding: 8px 12px;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: background 0.2s ease;
+    flex-shrink: 0;
+  }
+  
+  .viewport-load-btn:hover {
+    background: #ff5e99;
+  }
+  
+  
+  /* ── RIGHT PANEL: Outfits Showcase ───────────── */
+  .closet-outfits-panel {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+  }
+  
+  .outfits-panel-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  
+  .outfits-panel-header .section-title {
+    margin-bottom: 0;
+  }
+  
+  .outfit-count-badge {
+    font-size: 11px;
+    font-weight: 700;
+    color: #ff73a8;
+    background: #ffe5ef;
+    padding: 4px 10px;
+    border-radius: 20px;
+  }
+  
+  /* ── Loading & Empty States ── */
+  .outfits-loading,
+  .outfits-empty {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 14px;
+    min-height: 280px;
+    color: #bbb;
+    text-align: center;
+  }
+  
+  .outfits-loading p,
+  .outfits-empty  p {
+    font-size: 14px;
+    font-style: italic;
+    color: #ccc;
+  }
+  
+  .loading-spinner {
+    width: 36px;
+    height: 36px;
+    border: 3px solid #ffd6e4;
+    border-top-color: #ff73a8;
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+  }
+  
+  @keyframes spin {
+    to { transform: rotate(360deg); }
+  }
+  
+  .empty-icon {
+    font-size: 48px;
+    opacity: 0.4;
+  }
+  
+  .empty-cta-btn {
+    font-size: 13px;
+    font-weight: 700;
+    color: white;
+    background: #ff73a8;
+    padding: 10px 20px;
+    border-radius: 12px;
+    text-decoration: none;
+    transition: background 0.2s ease;
+  }
+  
+  .empty-cta-btn:hover {
+    background: #ff5e99;
+  }
+  
+  
+  /* ── Outfit Cards Grid ────────────────────────── */
+  .outfits-showcase-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 16px;
+    width: 100%;
+  }
+  
+  /* Individual outfit card */
+  .closet-outfit-card {
+    background: white;
+    border: 2px solid #eee2dc;
+    border-radius: 18px;
+    overflow: visible;       /* MUST be visible — allows delete btn to float above */
+    position: relative;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.03);
+  }
+  
+  .closet-outfit-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px rgba(255, 115, 168, 0.1);
+    border-color: #ffd6e4;
+  }
+  
+  /* Active / selected card in viewport */
+  .closet-card-active {
+    border-color: #ff73a8 !important;
+    background: #fff8fb !important;
+    box-shadow: 0 6px 18px rgba(255, 115, 168, 0.18) !important;
+  }
+  
+  /* Removal animation */
+  @keyframes cardFadeOut {
+    from { opacity: 1; transform: scale(1);    }
+    to   { opacity: 0; transform: scale(0.88); }
+  }
+  
+  .closet-card-removing {
+    animation: cardFadeOut 0.25s ease forwards;
+    pointer-events: none;
+  }
+  
+  /* ── Thumbnail strip inside card ── */
+  .closet-thumbs-strip {
+    display: flex;
+    flex-direction: row;
+    gap: 3px;
+    padding: 10px 10px 6px;
+    height: 110px;
+    background: #faf6f3;
+    border-radius: 16px 16px 0 0;
+    overflow: hidden;
+    align-items: stretch;
+  }
+  
+  .closet-thumb {
+    flex: 1;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 8px;
+    border: 1px solid #f0e6df;
+    background: white;
+  }
+  
+  .closet-thumb-empty {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #ddd;
+    font-size: 16px;
+    background: #fdfaf8;
+    border-radius: 8px;
+  }
+  
+  /* ── Card footer ── */
+  .closet-card-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 8px 10px 10px;
+    gap: 6px;
+  }
+  
+  .closet-card-name {
+    font-size: 11px;
+    font-weight: 800;
+    color: #555;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 75%;
+  }
+  
+  .closet-piece-count {
+    font-size: 10px;
+    font-weight: 700;
+    color: #ff73a8;
+    background: #ffe5ef;
+    padding: 2px 7px;
+    border-radius: 6px;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+  
+  
+  /* ── Hover Delete Button ──────────────────────── */
+  .closet-delete-btn {
+    position: absolute;
+    top: -8px;
+    right: -8px;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    border: 1.5px solid #ffcccc;
+    background: #ffe5e5;
+    color: #ff6b6b;
+    font-size: 11px;
+    font-weight: 900;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    z-index: 99999;           /* Float above thumbnails with maximum authority */
+  
+    /* Hidden by default — smooth reveal on parent hover */
+    opacity: 0;
+    transform: scale(0.7);
+    transition: opacity 0.2s ease, transform 0.2s ease, background 0.15s ease;
+  }
+  
+  .closet-outfit-card:hover .closet-delete-btn {
+    opacity: 1;
+    transform: scale(1);
+  }
+  
+  .closet-delete-btn:hover {
+    background: #ffcccc;
+    color: #e64c4c;
+    transform: scale(1.15) !important;
+  }
+  
+  
+  /* ── Active Nav Link ──────────────────────────── */
+  .nav-active {
+    color: #ff73a8 !important;
+    font-weight: 700;
+  }
+  
+  
+  /* ── Mobile Responsiveness ────────────────────── */
+  @media (max-width: 900px) {
+    .closet-dashboard {
+      grid-template-columns: 1fr;
+    }
+  
+    .closet-viewport-panel {
+      position: static;
+      order: 2; /* Outfits grid first on mobile, avatar preview below */
+    }
+  
+    .closet-outfits-panel {
+      order: 1;
+    }
+  
+    .closet-hero h1 {
+      font-size: 44px;
+    }
+  
+    .outfits-showcase-grid {
+      grid-template-columns: repeat(auto-fill, minmax(148px, 1fr));
+      gap: 12px;
+    }
+  }
+  
+  @media (max-width: 480px) {
+    .closet-hero h1 { font-size: 34px; }
+  
+    .outfits-showcase-grid {
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+  
+    .closet-thumbs-strip {
+      height: 90px;
+    }
+  
+    .avatar-piece-img {
+      width: 46px;
+      height: 46px;
+    }
+  }

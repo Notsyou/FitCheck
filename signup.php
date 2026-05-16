@@ -2,7 +2,7 @@
 session_start();
 // signup.php
 
-header('Content-Type: text/plain');
+header('Content-Type: application/json');
 
 $host = getenv('DB_HOST') ?: 'db';
 $user = getenv('DB_USER') ?: 'fitcheck_user';
@@ -26,7 +26,7 @@ $check->execute();
 $check->store_result();
 
 if ($check->num_rows > 0) {
-    echo "Username already exists";
+    echo json_encode(["success" => false, "message" => "Username already exists"]);
 } else {
     $hashedPassword = password_hash($password, PASSWORD_BCRYPT);
 
@@ -34,11 +34,10 @@ if ($check->num_rows > 0) {
     $stmt->bind_param("ss", $username, $hashedPassword);
 
     if ($stmt->execute()) {
-        // Immediately log the new user in by storing their new ID in session
         $_SESSION['user_id'] = $stmt->insert_id;
-        echo "success";
+        echo json_encode(["success" => true, "message" => "success"]);
     } else {
-        echo "Signup Failed";
+        echo json_encode(["success" => false, "message" => "Signup Failed"]);
     }
     $stmt->close();
 }

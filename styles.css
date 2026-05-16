@@ -1912,13 +1912,13 @@ footer p{
   background: white;
   border: 1px solid #eee2dc;
   border-radius: 16px;
-  padding: 12px;                /* ✨ Increased for clean inner breathing space */
+  padding: 12px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  height: 160px; /* Locked height property to stabilize dynamic injections */
-  position: relative !important; /* 👑 CRITICAL: Mandates absolute children anchor perfectly inside this card */
-  overflow: hidden !important; /* Prevents raw media vectors from breaking boundaries */
+  height: 160px;
+  position: relative !important;  /* Anchors absolutely-positioned children inside this card */
+  overflow: visible !important;   /* CRITICAL: must be visible so the delete btn isn't clipped */
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.02);
   transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
@@ -2089,5 +2089,3 @@ footer p{
     border-right: 1px solid #ebdcd5;
     padding-right: 6px;
   }
-
-

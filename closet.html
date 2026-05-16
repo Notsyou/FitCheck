@@ -1,40 +1,149 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Fit Check | Your Closet</title>
-    <link rel="stylesheet" href="styles.css"> <script src="https://cdn.tailwindcss.com"></script> </head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>fitcheck — my closet</title>
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="closet.css" />
+</head>
 <body>
-    <nav class="navbar" id="mainNav"></nav>
 
-    <div class="container closet-page-wrapper">
-        <div class="closet-header">
-            <h1>My <span>Closet</span></h1>
-        </div>
-
-        <div class="closet-layout">
-            <section class="outfit-gallery-panel">
-                <h3 class="panel-title">SAVED LOOKS ♡</h3>
-                <div id="outfitsGrid" class="outfits-grid">
-                    </div>
-            </section>
-
-            <aside class="detail-panel" id="detailPanel">
-                <div class="detail-empty-state" id="detailEmpty">
-                    <div class="detail-empty-icon">✨</div>
-                    <h4 class="detail-empty-title">Your Style Vault</h4>
-                    <p class="detail-empty-sub">Select a fit to view the full breakdown.</p>
-                </div>
-
-                <div class="detail-content" id="detailContent">
-                    <h3 id="detailLabel" class="detail-outfit-label"></h3>
-                    <div id="detailSlots" class="detail-slots"></div>
-                </div>
-            </aside>
-        </div>
+  <!-- ── Login Popup ─────────────────────── -->
+  <div class="form-container" id="loginContainer">
+    <div class="form-box">
+      <h2>welcome back ✨</h2>
+      <p>Log into your account to view your closet.</p>
+      <input type="text"     id="loginUsername" placeholder="Username" class="form-input" />
+      <input type="password" id="loginPassword" placeholder="Password" class="form-input" />
+      <button class="form-submit-btn" onclick="login()">LOG IN</button>
+      <p class="form-switch">Don't have an account? <a href="#" onclick="showSignup()">Sign up</a></p>
+      <button class="form-close-btn" onclick="closePopups()">✕</button>
     </div>
+  </div>
 
-    <script src="auth.js"></script>
-    <script src="closet.js"></script>
+  <!-- ── Signup Popup ────────────────────── -->
+  <div class="form-container" id="signupContainer">
+    <div class="form-box">
+      <h2>join fitcheck 💖</h2>
+      <p>Create an account to save outfits and build your digital closet.</p>
+      <input type="text"     id="signupUsername" placeholder="Username" class="form-input" />
+      <input type="password" id="signupPassword" placeholder="Password" class="form-input" />
+      <button class="form-submit-btn" onclick="signup()">SIGN UP</button>
+      <p class="form-switch">Already have an account? <a href="#" onclick="showLogin()">Log in</a></p>
+      <button class="form-close-btn" onclick="closePopups()">✕</button>
+    </div>
+  </div>
+
+  <!-- ── Main Page Wrapper ───────────────── -->
+  <div class="container">
+
+    <!-- Navbar -->
+    <nav class="navbar">
+      <div class="logo">fit<span>✩check</span></div>
+      <div class="nav-links" id="navLinks">
+        <a href="home.html">HOME</a>
+        <a href="fittingroom.html">FITTING ROOM</a>
+        <a href="closet.html" class="nav-active">CLOSET</a>
+        <a href="#">ABOUT</a>
+      </div>
+      <div class="nav-right">
+        <div class="nav-buttons" id="authButtons"></div>
+        <button class="hamburger" id="hamburgerBtn" onclick="toggleMobileNav()" aria-label="Menu">
+          <span></span><span></span><span></span>
+        </button>
+      </div>
+    </nav>
+
+    <!-- Page Title -->
+    <header class="closet-hero">
+      <h1>My Closet</h1>
+      <p>your saved fits, all in one place ✨</p>
+    </header>
+
+    <!-- ── Split-Screen Dashboard ─────────── -->
+    <div class="closet-dashboard">
+
+      <!-- LEFT: Avatar Viewport Panel -->
+      <aside class="closet-viewport-panel">
+        <div class="viewport-header">
+          <div class="section-title">♡ OUTFIT PREVIEW</div>
+          <span class="viewport-subtitle" id="viewportLabel">Select a fit to preview</span>
+        </div>
+
+        <!-- Avatar Stack — each slot renders one piece -->
+        <div class="avatar-frame" id="avatarFrame">
+
+          <!-- Empty / idle state -->
+          <div class="avatar-idle" id="avatarIdle">
+            <div class="avatar-idle-icon">👗</div>
+            <p>Click any saved outfit<br>to dress your avatar</p>
+          </div>
+
+          <!-- Layered piece slots — rendered by JS -->
+          <div class="avatar-layers" id="avatarLayers" style="display:none;">
+            <div class="avatar-slot" id="avatar-hat">
+              <img class="avatar-piece-img" id="avatar-img-hat"         alt="Hat" />
+              <span class="avatar-slot-label">HAT</span>
+            </div>
+            <div class="avatar-slot" id="avatar-top">
+              <img class="avatar-piece-img" id="avatar-img-top"         alt="Top" />
+              <span class="avatar-slot-label">TOP</span>
+            </div>
+            <div class="avatar-slot" id="avatar-bottom">
+              <img class="avatar-piece-img" id="avatar-img-bottom"      alt="Bottom" />
+              <span class="avatar-slot-label">BOTTOM</span>
+            </div>
+            <div class="avatar-slot" id="avatar-accessories">
+              <img class="avatar-piece-img" id="avatar-img-accessories" alt="Accessories" />
+              <span class="avatar-slot-label">ACCESSORIES</span>
+            </div>
+            <div class="avatar-slot" id="avatar-footwear">
+              <img class="avatar-piece-img" id="avatar-img-footwear"    alt="Footwear" />
+              <span class="avatar-slot-label">FOOTWEAR</span>
+            </div>
+          </div>
+
+        </div><!-- /avatar-frame -->
+
+        <!-- Outfit meta strip shown when one is selected -->
+        <div class="viewport-meta" id="viewportMeta" style="display:none;">
+          <span class="viewport-outfit-name" id="viewportOutfitName"></span>
+          <button class="viewport-load-btn" id="viewportLoadBtn">
+            Open in Fitting Room →
+          </button>
+        </div>
+      </aside>
+
+      <!-- RIGHT: Saved Outfits Showcase Grid -->
+      <main class="closet-outfits-panel">
+        <div class="outfits-panel-header">
+          <div class="section-title">✩ ALL SAVED OUTFITS</div>
+          <span class="outfit-count-badge" id="outfitCountBadge">0 outfits</span>
+        </div>
+
+        <!-- Loading skeleton -->
+        <div class="outfits-loading" id="outfitsLoading">
+          <div class="loading-spinner"></div>
+          <p>Loading your fits…</p>
+        </div>
+
+        <!-- Empty state -->
+        <div class="outfits-empty" id="outfitsEmpty" style="display:none;">
+          <div class="empty-icon">💭</div>
+          <p>No saved outfits yet!</p>
+          <a href="fittingroom.html" class="empty-cta-btn">Build your first fit →</a>
+        </div>
+
+        <!-- Outfit cards grid — populated by JS -->
+        <div class="outfits-showcase-grid" id="outfitsGrid" style="display:none;"></div>
+
+      </main>
+
+    </div><!-- /closet-dashboard -->
+
+  </div><!-- /container -->
+
+  <script src="closet.js"></script>
 </body>
 </html>
