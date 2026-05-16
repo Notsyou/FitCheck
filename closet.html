@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Fit Check | Your Closet</title>
+    <link rel="stylesheet" href="styles.css"> <script src="https://cdn.tailwindcss.com"></script> </head>
+<body>
+    <nav class="navbar" id="mainNav"></nav>
+
+    <div class="container closet-page-wrapper">
+        <div class="closet-header">
+            <h1>My <span>Closet</span></h1>
+        </div>
+
+        <div class="closet-layout">
+            <section class="outfit-gallery-panel">
+                <h3 class="panel-title">SAVED LOOKS ♡</h3>
+                <div id="outfitsGrid" class="outfits-grid">
+                    </div>
+            </section>
+
+            <aside class="detail-panel" id="detailPanel">
+                <div class="detail-empty-state" id="detailEmpty">
+                    <div class="detail-empty-icon">✨</div>
+                    <h4 class="detail-empty-title">Your Style Vault</h4>
+                    <p class="detail-empty-sub">Select a fit to view the full breakdown.</p>
+                </div>
+
+                <div class="detail-content" id="detailContent">
+                    <h3 id="detailLabel" class="detail-outfit-label"></h3>
+                    <div id="detailSlots" class="detail-slots"></div>
+                </div>
+            </aside>
+        </div>
+    </div>
+
+    <script src="auth.js"></script>
+    <script src="closet.js"></script>
+</body>
+</html>

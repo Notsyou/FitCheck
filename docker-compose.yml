@@ -1,0 +1,60 @@
+version: '3.8'
+
+services:
+
+  # PHP + Apache container (your web app)
+  app:
+    build: .
+    container_name: fitcheck_app
+    ports:
+      - "8080:80"         # Access via http://localhost:8080
+    volumes:
+      - .:/var/www/html/                          # Live-mounts your project folder
+      - ./stored_images:/var/www/html/stored_images  # Persists uploaded images
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      DB_HOST: db
+      DB_USER: fitcheck_user
+      DB_PASS: fitcheck_pass
+      DB_NAME: fashion_db
+
+  # MySQL container
+  db:
+    image: mysql:8.0
+    container_name: fitcheck_db
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: root_secret
+      MYSQL_DATABASE: fashion_db
+      MYSQL_USER: fitcheck_user
+      MYSQL_PASSWORD: fitcheck_pass
+    ports:
+      - "3307:3306"       # 3307 on host so it doesn't clash with XAMPP's MySQL
+    volumes:
+      - db_data:/var/lib/mysql          # Persists DB data between restarts
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql  # Auto-runs on first start
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-ufitcheck_user", "-pfitcheck_pass"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  # PHPMyAdmin (The Database Dashboard)
+  phpmyadmin:
+    image: phpmyadmin:latest
+    container_name: fitcheck_pma
+    links:
+      - db
+    ports:
+      - "8081:80"         # Access via http://localhost:8081
+    environment:
+      PMA_HOST: db
+      PMA_USER: fitcheck_user
+      PMA_PASSWORD: fitcheck_pass
+    depends_on:
+      - db
+
+volumes:
+  db_data:

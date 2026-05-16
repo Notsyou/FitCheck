@@ -1,0 +1,20 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: web-deployment-fitcheck
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: web-site
+  template:
+    metadata:
+      labels:
+        app: web-site
+    spec:
+      containers:
+      - name: web-container
+        image: fitcheck:v0.0.2
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 80

@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Fit Check</title>
+
+  <link rel="stylesheet" href="styles.css">
+  
+</head>
+
+<body>
+<!-- LOGIN POPUP -->
+<div id="loginContainer" class="form-container">
+
+    <div class="form-box">
+
+        <h2>Login</h2>
+
+        <input type="text" id="loginUsername" placeholder="Username">
+
+        <input type="password" id="loginPassword" placeholder="Password">
+
+        <button onclick="login()">Login</button>
+        <span class="close-btn" onclick="closePopups()">&times;</span>
+    </div>
+
+</div>
+
+<!-- SIGNUP POPUP -->
+<div id="signupContainer" class="form-container">
+
+    <div class="form-box">
+
+        <h2>Create Account</h2>
+
+        <input type="text" id="signupUsername" placeholder="Username">
+
+        <input type="password" id="signupPassword" placeholder="Password">
+
+        <button onclick="signup()">Sign Up</button>
+        <span class="close-btn" onclick="closePopups()">&times;</span>
+    </div>
+
+</div>
+
+
+  <div class="container">
+
+  <!-- NAVBAR -->
+
+<nav class="navbar">
+
+    <div class="logo">
+        fit<span>✩check</span>
+    </div>
+
+    <div class="nav-links">
+        <a href="home.html">HOME</a>
+        <a href="fittingroom.html">FITTING ROOM</a>
+        <a href="#">CLOSET</a>
+        <a href="#">ABOUT</a>
+    </div>
+
+    <div class="nav-buttons" id="authButtons">
+     <button class="logout-btn" onclick="showLogin()">LOGIN</button>
+     <button class="signup-btn" onclick="showSignup()">SIGN UP</button>
+    </div>
+
+</nav>
+
+
+  <!-- HERO -->
+
+  <section class="hero">
+
+    <div class="hero-text">
+
+      <div class="tag">
+        ♡ AI OUTFIT GENERATOR
+      </div>
+
+      <h1>
+        your vibe.<br>
+        your fit.<br>
+        <span class="pink">your way.</span>
+      </h1>
+
+      <p>
+        tell us your vibe, pick your pieces,
+        and let AI create the perfect outfit
+        for any occasion.
+      </p>
+
+      <button class="generate-btn" onclick="generateOutfit()">
+        GENERATE OUTFIT ✨
+      </button>
+
+    </div>
+
+    <div class="hero-image">
+      <div class="placeholder">
+        MAIN OUTFIT IMAGE
+      </div>
+    </div>
+
+  </section>
+
+  <!-- HOW IT WORKS -->
+
+  <section class="how-it-works">
+
+    <div class="how-title">
+      ✧ HOW IT WORKS
+    </div>
+
+    <div class="steps">
+
+      <div class="step">
+        <div class="icon">💖</div>
+        <h3>1. CHOOSE A VIBE</h3>
+        <p>Pick the mood or aesthetic you're feeling today.</p>
+      </div>
+
+      <div class="step">
+        <div class="icon">🧥</div>
+        <h3>2. ADD YOUR PIECES</h3>
+        <p>Select items from your closet or collection.</p>
+      </div>
+
+      <div class="step">
+        <div class="icon">✨</div>
+        <h3>3. GENERATE</h3>
+        <p>Our AI will style the perfect outfit just for you.</p>
+      </div>
+
+      <div class="step">
+        <div class="icon">💚</div>
+        <h3>4. SAVE & SLAY</h3>
+        <p>Save your favorite looks and wear your confidence.</p>
+      </div>
+
+    </div>
+
+  </section>
+
+
+  <!-- FOOTER -->
+
+  <footer>
+
+    <div>
+      <h3>fit✩check</h3>
+      <p>cute fits. good vibes.</p>
+      <p>made for every you.</p>
+    </div>
+
+    <div>
+      <h3>MENU</h3>
+      <p>outfit generator</p>
+      <p>lookbook</p>
+      <p>favorites</p>
+    </div>
+
+    <div>
+      <h3>SUPPORT</h3>
+      <p>faq</p>
+      <p>contact us</p>
+      <p>privacy policy</p>
+    </div>
+
+    <div>
+      <h3>COMPANY</h3>
+      <p>careers</p>
+      <p>press</p>
+      <p>influencer program</p>
+    </div>
+
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
