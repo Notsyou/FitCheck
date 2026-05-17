@@ -9,37 +9,33 @@
 </head>
 <body>
 
+  <!-- Auth Modals -->
   <div id="loginContainer" class="form-container">
     <div class="form-box">
-        <span class="close-btn" onclick="closePopups()">×</span>
-        <h2>Login</h2>
-        <input type="text" id="loginUsername" placeholder="Username">
-        <input type="password" id="loginPassword" placeholder="Password">
-        <button onclick="login()">Login</button>
+      <h2>Login</h2>
+      <input type="text"     id="loginUsername" placeholder="Username" />
+      <input type="password" id="loginPassword" placeholder="Password" />
+      <button onclick="login()">Login</button>
+      <span class="close-btn" onclick="closePopups()">&times;</span>
     </div>
-</div>
+  </div>
 
-<div id="signupContainer" class="form-container">
+  <div id="signupContainer" class="form-container">
     <div class="form-box">
-        <span class="close-btn" onclick="closePopups()">×</span>
-        <h2>Sign Up</h2>
-        <input type="text" id="signupUsername" placeholder="Username">
-        <input type="password" id="signupPassword" placeholder="Password">
-        <button onclick="signup()">Sign Up</button>
+      <h2>Create Account</h2>
+      <input type="text"     id="signupUsername" placeholder="Username" />
+      <input type="password" id="signupPassword" placeholder="Password" />
+      <button onclick="signup()">Sign Up</button>
+      <span class="close-btn" onclick="closePopups()">&times;</span>
     </div>
-</div>
+  </div>
 
-  <!-- ── Closet Lock Screen ────────────────
-       Mirrors fittingroom.html's #fittingRoomLock exactly so the shared
-       .lock-container / .lock-box styles from styles.css apply with no
-       extra CSS needed. Visibility is controlled by updateNavbar() in
-       script.js via the same isLoggedIn localStorage check.
-  ── -->
+  <!-- Guest Lock Screen -->
   <div id="closetLock" class="lock-container" style="display: flex;">
     <div class="lock-box">
-      <div class="lock-icon">🔒</div>
+      <div class="lock-icon">&#128274;</div>
       <h2>Your Closet Awaits</h2>
-      <p>Log in or create an account to view your saved outfits and build your digital wardrobe. ✨</p>
+      <p>Log in or create an account to view your saved outfits and build your digital wardrobe.</p>
       <div class="lock-actions">
         <button class="lock-login-btn"  onclick="showLogin()">LOGIN</button>
         <button class="lock-signup-btn" onclick="showSignup()">SIGN UP</button>
@@ -47,12 +43,12 @@
     </div>
   </div>
 
-  <!-- ── Main Page Wrapper ───────────────── -->
+  <!-- Page Wrapper -->
   <div class="container">
 
     <!-- Navbar -->
     <nav class="navbar">
-      <div class="logo">fit<span>✩check</span></div>
+      <div class="logo">fit<span>check</span></div>
       <div class="nav-links" id="navLinks">
         <a href="home.html">HOME</a>
         <a href="fittingroom.html">FITTING ROOM</a>
@@ -67,35 +63,32 @@
       </div>
     </nav>
 
-    <!-- Page Title -->
+    <!-- Page Hero -->
     <header class="closet-hero">
       <h1>My Closet</h1>
-      <p>your saved fits, all in one place ✨</p>
+      <p>your saved fits, all in one place</p>
     </header>
 
-
-
-    <!-- ── Split-Screen Dashboard ─────────── -->
+    <!-- Split-Screen Dashboard -->
     <div class="closet-dashboard">
 
-      <!-- LEFT: Avatar Viewport Panel -->
+      <!-- Left Panel: Avatar Viewport -->
       <aside class="closet-viewport-panel">
         <div class="viewport-header">
-          <div class="section-title">♡ OUTFIT PREVIEW</div>
+          <div class="section-title">OUTFIT PREVIEW</div>
           <span class="viewport-subtitle" id="viewportLabel">Select a fit to preview</span>
         </div>
 
-        <!-- Avatar Stack — each slot renders one piece -->
         <div class="avatar-frame" id="avatarFrame">
 
-          <!-- Empty / idle state -->
+          <!-- Idle state -->
           <div class="avatar-idle" id="avatarIdle">
-            <div class="avatar-idle-icon">👗</div>
-            <p>Click any saved outfit<br>to dress your avatar</p>
+            <div class="avatar-idle-icon">&#128247;</div>
+            <p>Click any saved outfit<br />to dress your avatar</p>
           </div>
 
-          <!-- Layered piece slots — rendered by JS -->
-          <div class="avatar-layers" id="avatarLayers" style="display:none;">
+          <!-- Layered piece slots -->
+          <div class="avatar-layers" id="avatarLayers" style="display: none;">
             <div class="avatar-slot" id="avatar-hat">
               <img class="avatar-piece-img" id="avatar-img-hat"         alt="Hat" />
               <span class="avatar-slot-label">HAT</span>
@@ -120,47 +113,53 @@
 
         </div><!-- /avatar-frame -->
 
-        <!-- Outfit meta strip shown when one is selected -->
-        <div class="viewport-meta" id="viewportMeta" style="display:none;">
+        <!-- Viewport Meta Strip -->
+        <div class="viewport-meta" id="viewportMeta" style="display: none;">
           <span class="viewport-outfit-name" id="viewportOutfitName"></span>
-          <button class="viewport-load-btn" id="viewportLoadBtn">
-            Open in Fitting Room →
-          </button>
+          <button class="viewport-load-btn" id="viewportLoadBtn">Open in Fitting Room &rarr;</button>
         </div>
       </aside>
 
-      <!-- RIGHT: Saved Outfits Showcase Grid -->
+      <!-- Right Panel: Saved Outfits Grid -->
       <main class="closet-outfits-panel">
         <div class="outfits-panel-header">
-          <div class="section-title">✩ ALL SAVED OUTFITS</div>
+          <div class="section-title">ALL SAVED OUTFITS</div>
           <span class="outfit-count-badge" id="outfitCountBadge">0 outfits</span>
-              <!-- ── Global Delete Action ─────────── -->
-    <div class="closet-global-actions">
-      <button id="globalDeleteBtn" class="global-delete-btn" onclick="deleteActiveOutfit()" disabled>
-        🗑️ Delete Selected
-      </button>
-    </div>
+          <div class="closet-global-actions">
+            <button id="globalDeleteBtn" class="global-delete-btn" onclick="deleteActiveOutfit()" disabled>
+              Delete Selected
+            </button>
+          </div>
         </div>
 
-        <!-- Loading skeleton -->
+        <!-- Loading state -->
         <div class="outfits-loading" id="outfitsLoading">
           <div class="loading-spinner"></div>
-          <p>Loading your fits…</p>
+          <p>Loading your fits...</p>
         </div>
 
         <!-- Empty state -->
-        <div class="outfits-empty" id="outfitsEmpty" style="display:none;">
-          <div class="empty-icon">💭</div>
-          <p>No saved outfits yet!</p>
-          <a href="fittingroom.html" class="empty-cta-btn">Build your first fit →</a>
+        <div class="outfits-empty" id="outfitsEmpty" style="display: none;">
+          <div class="empty-icon">&#128172;</div>
+          <p>No saved outfits yet.</p>
+          <a href="fittingroom.html" class="empty-cta-btn">Build your first fit &rarr;</a>
         </div>
 
-        <!-- Outfit cards grid — populated by JS -->
-        <div class="outfits-showcase-grid" id="outfitsGrid" style="display:none;"></div>
+        <!-- Outfit cards grid (populated by JS) -->
+        <div class="outfits-showcase-grid" id="outfitsGrid" style="display: none;"></div>
 
       </main>
 
     </div><!-- /closet-dashboard -->
+
+    <!-- Individual Items Inventory -->
+    <div class="items-inventory-section">
+      <div class="items-panel-header">
+        <h2 class="section-title">MY INDIVIDUAL ITEMS</h2>
+        <span id="itemCountBadge" class="item-count-badge">0 items</span>
+      </div>
+      <div id="itemsInventoryGrid" class="items-inventory-grid"></div>
+    </div>
 
   </div><!-- /container -->
 

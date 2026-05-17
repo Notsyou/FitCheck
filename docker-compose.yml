@@ -9,8 +9,8 @@ services:
     ports:
       - "8080:80"         # Access via http://localhost:8080
     volumes:
-      - .:/var/www/html/                          # Live-mounts your project folder
-      - ./stored_images:/var/www/html/stored_images  # Persists uploaded images
+      - .:/var/www/html/                             # Live-mounts code files
+      - fitcheck_uploads:/var/www/html/stored_images # 🚀 Named volume handles cross-device uploads smoothly!
     depends_on:
       db:
         condition: service_healthy
@@ -58,3 +58,4 @@ services:
 
 volumes:
   db_data:
+  fitcheck_uploads: # 🚀 Declares the dedicated isolated upload volume

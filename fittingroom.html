@@ -2,148 +2,161 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Fit Check</title>
-  <link rel="stylesheet" href="styles.css">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>fitcheck — fitting room</title>
+  <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
 
+  <!-- Guest Lock Screen -->
   <div id="fittingRoomLock" class="lock-container">
     <div class="lock-box">
-        <div class="lock-icon">🔒</div>
-        <h2>Unlock the Fitting Room</h2>
-        <p>Join the club or log back in to mix, match, and generate your perfect outfits! ✨</p>
-        <div class="lock-actions">
-            <button class="lock-login-btn" onclick="showLoginFromLock()">LOGIN</button>
-            <button class="lock-signup-btn" onclick="showSignupFromLock()">SIGN UP</button>
-        </div>
+      <div class="lock-icon">&#128274;</div>
+      <h2>Unlock the Fitting Room</h2>
+      <p>Log in or create an account to mix, match, and generate outfits.</p>
+      <div class="lock-actions">
+        <button class="lock-login-btn"  onclick="showLoginFromLock()">LOGIN</button>
+        <button class="lock-signup-btn" onclick="showSignupFromLock()">SIGN UP</button>
+      </div>
     </div>
   </div>
 
+  <!-- Multi-Step Upload Wizard -->
   <div id="uploadWizardContainer" class="form-container">
-  <div class="form-box upload-wizard-box">
-    <div class="right-close">
-    <span class="upload-close-btn" onclick="closeUploadWizard()">&times;</span>
+    <div class="form-box upload-wizard-box">
+
+      <div class="right-close">
+        <span class="upload-close-btn" onclick="closeUploadWizard()">&times;</span>
+      </div>
+
+      <!-- Step 1: File Selection -->
+      <div id="uploadStep1" class="wizard-step active-step">
+        <h2>Upload Piece</h2>
+        <div class="drag-drop-zone" onclick="triggerFileInput()">
+          <div class="upload-cloud">&#9729;</div>
+          <p id="uploadStatusText">Click or drag an image file here to select your piece</p>
+          <input type="file" id="clothingFile" accept="image/*" style="display: none;" onchange="handleFileSelect(this)" />
+        </div>
+        <button class="wizard-next-btn" onclick="goToWizardStep(2)" id="step1NextBtn" disabled>NEXT &rarr;</button>
+      </div>
+
+      <!-- Step 2: Category Selection -->
+      <div id="uploadStep2" class="wizard-step">
+        <h2>Select Category</h2>
+        <p class="wizard-subtitle">How should we catalog this item?</p>
+
+        <div class="wizard-options-group">
+          <label class="wizard-radio-card">
+            <input type="radio" name="clothingCategory" value="pieces" checked onchange="toggleCategorySuboptions(this.value)" />
+            <div class="radio-card-content">
+              <span class="radio-icon">&#128088;</span>
+              <h3>Clothing Piece</h3>
+              <p>Single separate component (e.g., hat, top, shoes)</p>
+            </div>
+          </label>
+
+          <label class="wizard-radio-card">
+            <input type="radio" name="clothingCategory" value="whole" onchange="toggleCategorySuboptions(this.value)" />
+            <div class="radio-card-content">
+              <span class="radio-icon">&#128247;</span>
+              <h3>Whole Outfit</h3>
+              <p>Complete combined style statement</p>
+            </div>
+          </label>
+        </div>
+
+        <div id="specificPieceWrapper" class="wizard-dropdown-wrapper">
+          <label for="specificPieceType">Piece Assignment:</label>
+          <select id="specificPieceType" class="wizard-select">
+            <option value="hat">Hat</option>
+            <option value="top">Top</option>
+            <option value="bottom">Bottom</option>
+            <option value="accessories">Accessories</option>
+            <option value="footwear">Footwear</option>
+          </select>
+        </div>
+
+        <div class="wizard-navigation-buttons">
+          <button class="wizard-back-btn" onclick="goToWizardStep(1)">&larr; BACK</button>
+          <button class="wizard-next-btn" onclick="goToWizardStep(3)">NEXT &rarr;</button>
+        </div>
+      </div>
+
+      <!-- Step 3: Vibe Selection -->
+      <div id="uploadStep3" class="wizard-step">
+        <h2>Choose Vibe</h2>
+        <p class="wizard-subtitle">Select the primary aesthetic match</p>
+
+        <div class="wizard-vibe-select-grid">
+          <label class="vibe-pill-checkbox"><input type="radio" name="uploadVibe" value="Casual"     checked /><span>Casual</span></label>
+          <label class="vibe-pill-checkbox"><input type="radio" name="uploadVibe" value="Y2K"               /><span>Y2K</span></label>
+          <label class="vibe-pill-checkbox"><input type="radio" name="uploadVibe" value="Sporty"            /><span>Sporty</span></label>
+          <label class="vibe-pill-checkbox"><input type="radio" name="uploadVibe" value="Grunge"            /><span>Grunge</span></label>
+          <label class="vibe-pill-checkbox"><input type="radio" name="uploadVibe" value="Soft Girl"         /><span>Soft Girl</span></label>
+          <label class="vibe-pill-checkbox"><input type="radio" name="uploadVibe" value="Streetwear"        /><span>Streetwear</span></label>
+          <label class="vibe-pill-checkbox"><input type="radio" name="uploadVibe" value="Coquette"          /><span>Coquette</span></label>
+        </div>
+
+        <div class="wizard-navigation-buttons">
+          <button class="wizard-back-btn" onclick="goToWizardStep(2)">&larr; BACK</button>
+          <button type="button" class="wizard-next-btn finish-btn" onclick="submitUploadedPiece()">ADD TO CLOSET</button>
+        </div>
+      </div>
+
+    </div>
   </div>
-    <div id="uploadStep1" class="wizard-step active-step">
-      <h2>Upload Piece</h2>
-      <div class="drag-drop-zone" onclick="triggerFileInput()">
-        <div class="upload-cloud">☁</div>
-        <p id="uploadStatusText">Click or Drag image file here to select your piece</p>
-        <input type="file" id="clothingFile" accept="image/*" style="display: none;" onchange="handleFileSelect(this)">
-      </div>
-      <button class="wizard-next-btn" onclick="goToWizardStep(2)" id="step1NextBtn" disabled>NEXT →</button>
-    </div>
 
-    <div id="uploadStep2" class="wizard-step">
-      <h2>Select Category</h2>
-      <p class="wizard-subtitle">How should we catalog this item?</p>
-      
-      <div class="wizard-options-group">
-        <label class="wizard-radio-card">
-          <input type="radio" name="clothingCategory" value="pieces" checked onchange="toggleCategorySuboptions(this.value)">
-          <div class="radio-card-content">
-            <span class="radio-icon">👚</span>
-            <h3>Clothing Piece</h3>
-            <p>Single separate component (e.g., hat, top, shoes)</p>
-          </div>
-        </label>
-
-        <label class="wizard-radio-card">
-          <input type="radio" name="clothingCategory" value="whole" onchange="toggleCategorySuboptions(this.value)">
-          <div class="radio-card-content">
-            <span class="radio-icon">👗</span>
-            <h3>Whole Outfit</h3>
-            <p>Complete combined style statement</p>
-          </div>
-        </label>
-      </div>
-
-      <div id="specificPieceWrapper" class="wizard-dropdown-wrapper">
-        <label for="specificPieceType">Piece Assignment:</label>
-        <select id="specificPieceType" class="wizard-select">
-          <option value="hat">Hat</option>
-          <option value="top">Top</option>
-          <option value="bottom">Bottom</option>
-          <option value="accessories">Accessories</option>
-          <option value="footwear">Footwear</option>
-        </select>
-      </div>
-
-      <div class="wizard-navigation-buttons">
-        <button class="wizard-back-btn" onclick="goToWizardStep(1)">← BACK</button>
-        <button class="wizard-next-btn" onclick="goToWizardStep(3)">NEXT →</button>
-      </div>
-    </div>
-
-    <div id="uploadStep3" class="wizard-step">
-      <h2>Choose Vibe</h2>
-      <p class="wizard-subtitle">Select the primary aesthetic match</p>
-      
-      <div class="wizard-vibe-select-grid">
-        <label class="vibe-pill-checkbox"><input type="radio" name="uploadVibe" value="Casual" checked><span>Casual</span></label>
-        <label class="vibe-pill-checkbox"><input type="radio" name="uploadVibe" value="Y2K"><span>Y2K</span></label>
-        <label class="vibe-pill-checkbox"><input type="radio" name="uploadVibe" value="Sporty"><span>Sporty</span></label>
-        <label class="vibe-pill-checkbox"><input type="radio" name="uploadVibe" value="Grunge"><span>Grunge</span></label>
-        <label class="vibe-pill-checkbox"><input type="radio" name="uploadVibe" value="Soft Girl"><span>Soft Girl</span></label>
-        <label class="vibe-pill-checkbox"><input type="radio" name="uploadVibe" value="Streetwear"><span>Streetwear</span></label>
-        <label class="vibe-pill-checkbox"><input type="radio" name="uploadVibe" value="Coquette"><span>Coquette</span></label>
-      </div>
-
-      <div class="wizard-navigation-buttons">
-        <button class="wizard-back-btn" onclick="goToWizardStep(2)">← BACK</button>
-        <button type="button" class="wizard-next-btn finish-btn" onclick="submitUploadedPiece()">ADD TO CLOSET ✨</button>
-      </div>
-    </div>
-
-  </div>
-</div>
-
-  <!-- ── Save Outfit Modal ─────────────────────── -->
-  <div class="form-container1" id="saveOutfitModal" style="display:none;">
-    <div class="form-box1" style="max-width:360px; gap:12px;">
-      <h2>Name your fit!</h2>
-      <p>Give this outfit a name so you remember it later!</p>
-      <input type="text" id="outfitNameInput" class="form-input" placeholder="e.g. Casual Chic, Date Night..." maxlength="60" onkeydown="if(event.key==='Enter') confirmSaveOutfit();" />
+  <!-- Save Outfit Modal -->
+  <div class="form-container1" id="saveOutfitModal" style="display: none;">
+    <div class="form-box1" style="max-width: 360px; gap: 12px;">
+      <h2>Name your fit</h2>
+      <p>Give this outfit a name so you can find it later.</p>
+      <input
+        type="text"
+        id="outfitNameInput"
+        class="form-input"
+        placeholder="e.g. Casual Chic, Date Night..."
+        maxlength="60"
+        onkeydown="if (event.key === 'Enter') confirmSaveOutfit();"
+      />
       <button type="button" class="form-submit-btn1" onclick="confirmSaveOutfit()">SAVE OUTFIT</button>
-      <button type="button" class="form-close-btn1" onclick="closeSaveOutfitModal()">CLOSE</button>
+      <button type="button" class="form-close-btn1"  onclick="closeSaveOutfitModal()">CLOSE</button>
     </div>
   </div>
 
+  <!-- Auth Modals -->
   <div id="loginContainer" class="form-container">
     <div class="form-box">
-        <h2>Login</h2>
-        <input type="text" id="loginUsername" placeholder="Username">
-        <input type="password" id="loginPassword" placeholder="Password">
-        <button onclick="login()">Login</button>
-        <span class="close-btn" onclick="closePopups()">&times;</span>
+      <h2>Login</h2>
+      <input type="text"     id="loginUsername" placeholder="Username" />
+      <input type="password" id="loginPassword" placeholder="Password" />
+      <button onclick="login()">Login</button>
+      <span class="close-btn" onclick="closePopups()">&times;</span>
     </div>
   </div>
 
   <div id="signupContainer" class="form-container">
     <div class="form-box">
-        <h2>Create Account</h2>
-        <input type="text" id="signupUsername" placeholder="Username">
-        <input type="password" id="signupPassword" placeholder="Password">
-        <button onclick="signup()">Sign Up</button>
-        <span class="close-btn" onclick="closePopups()">&times;</span>
+      <h2>Create Account</h2>
+      <input type="text"     id="signupUsername" placeholder="Username" />
+      <input type="password" id="signupPassword" placeholder="Password" />
+      <button onclick="signup()">Sign Up</button>
+      <span class="close-btn" onclick="closePopups()">&times;</span>
     </div>
   </div>
 
+  <!-- Page Wrapper -->
   <div class="container">
 
+    <!-- Navbar -->
     <nav class="navbar">
-      <div class="logo">
-        fit<span>✩check</span>
-      </div>
-
+      <div class="logo">fit<span>check</span></div>
       <div class="nav-links" id="navLinks">
         <a href="home.html">HOME</a>
         <a href="fittingroom.html">FITTING ROOM</a>
         <a href="closet.html">CLOSET</a>
         <a href="#">ABOUT</a>
       </div>
-      
       <div class="nav-right">
         <div class="nav-buttons" id="authButtons"></div>
         <button class="hamburger" id="hamburgerBtn" onclick="toggleMobileNav()" aria-label="Menu">
@@ -152,239 +165,276 @@
       </div>
     </nav>
 
-<div class="main">
-    <aside class="sidebar">
+    <div class="main">
+
+      <!-- Left Panel: Vibe Filters and Category Browser -->
+      <aside class="sidebar">
+
         <div class="card">
-            <div class="section-title">♡ PICK YOUR VIBE</div>
-            <div class="vibe-list">
-                <button class="vibe-btn active">All</button>
-                <button class="vibe-btn">Casual</button>
-                <button class="vibe-btn">Y2K</button>
-                <button class="vibe-btn">Sporty</button>
-                <button class="vibe-btn">Grunge</button>
-                <button class="vibe-btn">Soft Girl</button>
-                <button class="vibe-btn">Streetwear</button>
-                <button class="vibe-btn">Coquette</button>
-            </div>
+          <div class="section-title">PICK YOUR VIBE</div>
+          <div class="vibe-list">
+            <button class="vibe-btn active">All</button>
+            <button class="vibe-btn">Casual</button>
+            <button class="vibe-btn">Y2K</button>
+            <button class="vibe-btn">Sporty</button>
+            <button class="vibe-btn">Grunge</button>
+            <button class="vibe-btn">Soft Girl</button>
+            <button class="vibe-btn">Streetwear</button>
+            <button class="vibe-btn">Coquette</button>
+          </div>
         </div>
 
         <div class="card">
           <div class="section-title">Your Uploaded Items</div>
           <div class="items-grid" id="itemsDisplayGrid">
-      
-              <div class="category-row">
-                  <div class="category-row-header">
-                      <span class="category-label">Hat</span>
-                      <span class="item-counter" id="counter-hat">0 / 0</span>
-                  </div>
-                  <div class="category-nav">
-                      <button class="arrow-btn" id="arrow-left-hat"  onclick="navigateCategory('hat', -1)">‹</button>
-                      <div class="item-slot" id="item-slot-hat"></div>
-                      <button class="arrow-btn" id="arrow-right-hat" onclick="navigateCategory('hat',  1)">›</button>
-                  </div>
-              </div>
-      
-              <div class="category-row">
-                  <div class="category-row-header">
-                      <span class="category-label">Top</span>
-                      <span class="item-counter" id="counter-top">0 / 0</span>
-                  </div>
-                  <div class="category-nav">
-                      <button class="arrow-btn" id="arrow-left-top"  onclick="navigateCategory('top', -1)">‹</button>
-                      <div class="item-slot" id="item-slot-top"></div>
-                      <button class="arrow-btn" id="arrow-right-top" onclick="navigateCategory('top',  1)">›</button>
-                  </div>
-              </div>
-      
-              <div class="category-row">
-                  <div class="category-row-header">
-                      <span class="category-label">Bottom</span>
-                      <span class="item-counter" id="counter-bottom">0 / 0</span>
-                  </div>
-                  <div class="category-nav">
-                      <button class="arrow-btn" id="arrow-left-bottom"  onclick="navigateCategory('bottom', -1)">‹</button>
-                      <div class="item-slot" id="item-slot-bottom"></div>
-                      <button class="arrow-btn" id="arrow-right-bottom" onclick="navigateCategory('bottom',  1)">›</button>
-                  </div>
-              </div>
-      
-              <div class="category-row">
-                  <div class="category-row-header">
-                      <span class="category-label">Accessories</span>
-                      <span class="item-counter" id="counter-accessories">0 / 0</span>
-                  </div>
-                  <div class="category-nav">
-                      <button class="arrow-btn" id="arrow-left-accessories"  onclick="navigateCategory('accessories', -1)">‹</button>
-                      <div class="item-slot" id="item-slot-accessories"></div>
-                      <button class="arrow-btn" id="arrow-right-accessories" onclick="navigateCategory('accessories',  1)">›</button>
-                  </div>
-              </div>
-      
-              <div class="category-row">
-                  <div class="category-row-header">
-                      <span class="category-label">Footwear</span>
-                      <span class="item-counter" id="counter-footwear">0 / 0</span>
-                  </div>
-                  <div class="category-nav">
-                      <button class="arrow-btn" id="arrow-left-footwear"  onclick="navigateCategory('footwear', -1)">‹</button>
-                      <div class="item-slot" id="item-slot-footwear"></div>
-                      <button class="arrow-btn" id="arrow-right-footwear" onclick="navigateCategory('footwear',  1)">›</button>
-                  </div>
-              </div>
-      
-          </div>
-      </div>
-    </aside>
 
-    <section class="center">
+            <!-- Hat -->
+            <div class="category-row">
+              <div class="category-row-header">
+                <span class="category-label">Hat</span>
+                <span class="item-counter" id="counter-hat">0 / 0</span>
+              </div>
+              <div class="category-nav">
+                <button class="arrow-btn" id="arrow-left-hat"  onclick="navigateCategory('hat', -1)">&#8249;</button>
+                <div class="item-slot" id="item-slot-hat"></div>
+                <button class="arrow-btn" id="arrow-right-hat" onclick="navigateCategory('hat',  1)">&#8250;</button>
+              </div>
+            </div>
+
+            <!-- Top -->
+            <div class="category-row">
+              <div class="category-row-header">
+                <span class="category-label">Top</span>
+                <span class="item-counter" id="counter-top">0 / 0</span>
+              </div>
+              <div class="category-nav">
+                <button class="arrow-btn" id="arrow-left-top"  onclick="navigateCategory('top', -1)">&#8249;</button>
+                <div class="item-slot" id="item-slot-top"></div>
+                <button class="arrow-btn" id="arrow-right-top" onclick="navigateCategory('top',  1)">&#8250;</button>
+              </div>
+            </div>
+
+            <!-- Bottom -->
+            <div class="category-row">
+              <div class="category-row-header">
+                <span class="category-label">Bottom</span>
+                <span class="item-counter" id="counter-bottom">0 / 0</span>
+              </div>
+              <div class="category-nav">
+                <button class="arrow-btn" id="arrow-left-bottom"  onclick="navigateCategory('bottom', -1)">&#8249;</button>
+                <div class="item-slot" id="item-slot-bottom"></div>
+                <button class="arrow-btn" id="arrow-right-bottom" onclick="navigateCategory('bottom',  1)">&#8250;</button>
+              </div>
+            </div>
+
+            <!-- Accessories -->
+            <div class="category-row">
+              <div class="category-row-header">
+                <span class="category-label">Accessories</span>
+                <span class="item-counter" id="counter-accessories">0 / 0</span>
+              </div>
+              <div class="category-nav">
+                <button class="arrow-btn" id="arrow-left-accessories"  onclick="navigateCategory('accessories', -1)">&#8249;</button>
+                <div class="item-slot" id="item-slot-accessories"></div>
+                <button class="arrow-btn" id="arrow-right-accessories" onclick="navigateCategory('accessories',  1)">&#8250;</button>
+              </div>
+            </div>
+
+            <!-- Footwear -->
+            <div class="category-row">
+              <div class="category-row-header">
+                <span class="category-label">Footwear</span>
+                <span class="item-counter" id="counter-footwear">0 / 0</span>
+              </div>
+              <div class="category-nav">
+                <button class="arrow-btn" id="arrow-left-footwear"  onclick="navigateCategory('footwear', -1)">&#8249;</button>
+                <div class="item-slot" id="item-slot-footwear"></div>
+                <button class="arrow-btn" id="arrow-right-footwear" onclick="navigateCategory('footwear',  1)">&#8250;</button>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+      </aside>
+
+      <!-- Center Panel: Outfit Generator -->
+      <section class="center">
+
         <div class="hero-text">
-            <h1><b>Your</b> Outfit.</h1>
-            <h2>Your <b>Way</b>.</h2>
+          <h1><b>Your</b> Outfit.</h1>
+          <h2>Your <b>Way</b>.</h2>
         </div>
 
-<div class="outfit-generator-card">
-          <h3 class="generator-title">OUTFIT GENERATOR ♡</h3>
-          
+        <div class="outfit-generator-card">
+          <h3 class="generator-title">OUTFIT GENERATOR</h3>
+
           <div class="generator-dashboard-layout">
-              
-              <div class="generator-master-preview">
-                  <div class="master-preview-frame">
-                      <img id="master-feature-image" src="" alt="Select an item to inspect" style="display: none;">
-                      <div id="master-preview-placeholder" class="master-placeholder-msg">
-                          <span>Tap any clothing piece to preview here ✨</span>
-                      </div>
-                  </div>
-              </div>
-      
-              <div class="generator-pills-stack">
-                  <div class="slot-wrapper" onclick="updateMasterPreview('hat')">
-                      <div id="gen-slot-hat" class="center-pill-item">
-                          <span class="empty-text">No Hat Applied</span>
-                      </div>
-                      <div class="slot-details-panel">
-                          <div class="badge-group">
-                              <span class="badge-type">HAT</span>
-                              <span class="badge-vibe">-</span> 
-                          </div>
-                          <div class="slot-actions-row">
-                              <button class="badge-shuffle" id="shuffle-btn-hat" onclick="randomizeSingleSlot('hat'); event.stopPropagation();" title="Shuffle Hat">🎲</button>
-                              <button class="badge-remove" id="remove-btn-hat" onclick="removeFromGenerator('hat'); event.stopPropagation();" disabled>X</button>
-                          </div>
-                      </div>
-                  </div>
-      
-                  <div class="slot-wrapper" onclick="updateMasterPreview('top')">
-                      <div id="gen-slot-top" class="center-pill-item">
-                          <span class="empty-text">No Top Applied</span>
-                      </div>
-                      <div class="slot-details-panel">
-                          <div class="badge-group">
-                              <span class="badge-type">TOP</span>
-                              <span class="badge-vibe">-</span>
-                          </div>
-                          <div class="slot-actions-row">
-                              <button class="badge-shuffle" id="shuffle-btn-top" onclick="randomizeSingleSlot('top'); event.stopPropagation();" title="Shuffle Top">🎲</button>
-                              <button class="badge-remove" id="remove-btn-top" onclick="removeFromGenerator('top'); event.stopPropagation();" disabled>X</button>
-                          </div>
-                      </div>
-                  </div>
-      
-                  <div class="slot-wrapper" onclick="updateMasterPreview('bottom')">
-                      <div id="gen-slot-bottom" class="center-pill-item">
-                          <span class="empty-text">No Bottom Applied</span>
-                      </div>
-                      <div class="slot-details-panel">
-                          <div class="badge-group">
-                              <span class="badge-type">BOTTOM</span>
-                              <span class="badge-vibe">-</span>
-                          </div>
-                          <div class="slot-actions-row">
-                              <button class="badge-shuffle" id="shuffle-btn-bottom" onclick="randomizeSingleSlot('bottom'); event.stopPropagation();" title="Shuffle Bottom">🎲</button>
-                              <button class="badge-remove" id="remove-btn-bottom" onclick="removeFromGenerator('bottom'); event.stopPropagation();" disabled>X</button>
-                          </div>
-                      </div>
-                  </div>
-      
-                  <div class="slot-wrapper" onclick="updateMasterPreview('accessories')">
-                      <div id="gen-slot-accessories" class="center-pill-item">
-                          <span class="empty-text">No Accessories Applied</span>
-                      </div>
-                      <div class="slot-details-panel">
-                          <div class="badge-group">
-                              <span class="badge-type">ACCESSORIES</span>
-                              <span class="badge-vibe">-</span>
-                          </div>
-                          <div class="slot-actions-row">
-                              <button class="badge-shuffle" id="shuffle-btn-accessories" onclick="randomizeSingleSlot('accessories'); event.stopPropagation();" title="Shuffle Accessories">🎲</button>
-                              <button class="badge-remove" id="remove-btn-accessories" onclick="removeFromGenerator('accessories'); event.stopPropagation();" disabled>X</button>
-                          </div>
-                      </div>
-                  </div>
-      
-                  <div class="slot-wrapper" onclick="updateMasterPreview('footwear')">
-                      <div id="gen-slot-footwear" class="center-pill-item">
-                          <span class="empty-text">No Footwear Applied</span>
-                      </div>
-                      <div class="slot-details-panel">
-                          <div class="badge-group">
-                              <span class="badge-type">FOOTWEAR</span>
-                              <span class="badge-vibe">-</span>
-                          </div>
-                          <div class="slot-actions-row">
-                              <button class="badge-shuffle" id="shuffle-btn-footwear" onclick="randomizeSingleSlot('footwear'); event.stopPropagation();" title="Shuffle Footwear">🎲</button>
-                              <button class="badge-remove" id="remove-btn-footwear" onclick="removeFromGenerator('footwear'); event.stopPropagation();" disabled>X</button>
-                          </div>
-                      </div>
-                  </div>
-              </div>
-          </div>
-          
-          <div class="bottom-controls">
-              <button type="button" class="random-btn" onclick="generateRandomOutfit()">RANDOMIZE ✨</button>
-              <div class="icons">
-                  <button class="icon-btn" id="saveOutfitBtn" onclick="saveCurrentOutfit()">♡</button>
-              </div>
-          </div>
-      </div>
-    </section>
 
-    <aside class="sidebar sidebar-right">
+            <!-- Master Preview Frame -->
+            <div class="generator-master-preview">
+              <div class="master-preview-frame">
+                <img id="master-feature-image" src="" alt="Select an item to inspect" style="display: none;" />
+                <div id="master-preview-placeholder" class="master-placeholder-msg">
+                  <span>Tap any clothing piece to preview here</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Slot Pills Stack -->
+            <div class="generator-pills-stack">
+
+              <!-- Hat slot -->
+              <div class="slot-wrapper" onclick="updateMasterPreview('hat')">
+                <div id="gen-slot-hat" class="center-pill-item">
+                  <span class="empty-text">No Hat Applied</span>
+                </div>
+                <div class="slot-details-panel">
+                  <div class="badge-group">
+                    <span class="badge-type">HAT</span>
+                    <span class="badge-vibe">-</span>
+                  </div>
+                  <div class="slot-actions-row">
+                    <button class="badge-shuffle" id="shuffle-btn-hat"  onclick="randomizeSingleSlot('hat'); event.stopPropagation();" title="Shuffle Hat">🎲</button>
+                    <button class="badge-remove"  id="remove-btn-hat"   onclick="removeFromGenerator('hat'); event.stopPropagation();" disabled>X</button>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Top slot -->
+              <div class="slot-wrapper" onclick="updateMasterPreview('top')">
+                <div id="gen-slot-top" class="center-pill-item">
+                  <span class="empty-text">No Top Applied</span>
+                </div>
+                <div class="slot-details-panel">
+                  <div class="badge-group">
+                    <span class="badge-type">TOP</span>
+                    <span class="badge-vibe">-</span>
+                  </div>
+                  <div class="slot-actions-row">
+                    <button class="badge-shuffle" id="shuffle-btn-top"  onclick="randomizeSingleSlot('top'); event.stopPropagation();" title="Shuffle Top">🎲</button>
+                    <button class="badge-remove"  id="remove-btn-top"   onclick="removeFromGenerator('top'); event.stopPropagation();" disabled>X</button>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Bottom slot -->
+              <div class="slot-wrapper" onclick="updateMasterPreview('bottom')">
+                <div id="gen-slot-bottom" class="center-pill-item">
+                  <span class="empty-text">No Bottom Applied</span>
+                </div>
+                <div class="slot-details-panel">
+                  <div class="badge-group">
+                    <span class="badge-type">BOTTOM</span>
+                    <span class="badge-vibe">-</span>
+                  </div>
+                  <div class="slot-actions-row">
+                    <button class="badge-shuffle" id="shuffle-btn-bottom"  onclick="randomizeSingleSlot('bottom'); event.stopPropagation();" title="Shuffle Bottom">🎲</button>
+                    <button class="badge-remove"  id="remove-btn-bottom"   onclick="removeFromGenerator('bottom'); event.stopPropagation();" disabled>X</button>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Accessories slot -->
+              <div class="slot-wrapper" onclick="updateMasterPreview('accessories')">
+                <div id="gen-slot-accessories" class="center-pill-item">
+                  <span class="empty-text">No Accessories Applied</span>
+                </div>
+                <div class="slot-details-panel">
+                  <div class="badge-group">
+                    <span class="badge-type">ACCESSORIES</span>
+                    <span class="badge-vibe">-</span>
+                  </div>
+                  <div class="slot-actions-row">
+                    <button class="badge-shuffle" id="shuffle-btn-accessories"  onclick="randomizeSingleSlot('accessories'); event.stopPropagation();" title="Shuffle Accessories">🎲</button>
+                    <button class="badge-remove"  id="remove-btn-accessories"   onclick="removeFromGenerator('accessories'); event.stopPropagation();" disabled>X</button>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Footwear slot -->
+              <div class="slot-wrapper" onclick="updateMasterPreview('footwear')">
+                <div id="gen-slot-footwear" class="center-pill-item">
+                  <span class="empty-text">No Footwear Applied</span>
+                </div>
+                <div class="slot-details-panel">
+                  <div class="badge-group">
+                    <span class="badge-type">FOOTWEAR</span>
+                    <span class="badge-vibe">-</span>
+                  </div>
+                  <div class="slot-actions-row">
+                    <button class="badge-shuffle" id="shuffle-btn-footwear"  onclick="randomizeSingleSlot('footwear'); event.stopPropagation();" title="Shuffle Footwear">🎲</button>
+                    <button class="badge-remove"  id="remove-btn-footwear"   onclick="removeFromGenerator('footwear'); event.stopPropagation();" disabled>X</button>
+                  </div>
+                </div>
+              </div>
+
+            </div><!-- /generator-pills-stack -->
+
+          </div><!-- /generator-dashboard-layout -->
+
+          <!-- Generator Controls -->
+          <div class="bottom-controls">
+            <button type="button" class="random-btn" onclick="generateRandomOutfit()">RANDOMIZE</button>
+            <div class="icons">
+              <button class="icon-btn" id="saveOutfitBtn" onclick="saveCurrentOutfit()">&#9825;</button>
+            </div>
+          </div>
+
+        </div><!-- /outfit-generator-card -->
+
+      </section>
+
+      <!-- Right Panel: Upload, Saved Outfits, and Analytics -->
+      <aside class="sidebar sidebar-right">
+
+        <!-- Upload Card -->
         <div class="card upload-box">
-            <div class="section-title">UPLOAD YOUR CLOTHES</div>
-            <div class="upload-cloud">☁</div>
-            <p>Add your own pieces to get better outfit recommendations!</p>
-            <button class="upload-btn" onclick="openUploadWizard()">UPLOAD</button>
+          <div class="section-title">UPLOAD YOUR CLOTHES</div>
+          <div class="upload-cloud">&#9729;</div>
+          <p>Add your own pieces to get better outfit recommendations.</p>
+          <button class="upload-btn" onclick="openUploadWizard()">UPLOAD</button>
         </div>
 
+        <!-- Saved Outfits Card -->
         <div class="card">
-          <div class="section-title" style="display:flex; align-items:center; justify-content:space-between;">
-            <span>♡ SAVED OUTFITS</span>
-            <button type="button" onclick="loadSavedOutfits()" title="Refresh saved outfits" style="background:none; border:none; cursor:pointer; font-size:14px; color:#ff82b4; padding:2px 6px; border-radius:6px; transition:transform 0.2s;" onmouseover="this.style.transform='rotate(180deg)'" onmouseout="this.style.transform='rotate(0deg)'">↻</button>
+          <div class="section-title" style="display: flex; align-items: center; justify-content: space-between;">
+            <span>SAVED OUTFITS</span>
+            <button
+              type="button"
+              onclick="loadSavedOutfits()"
+              title="Refresh saved outfits"
+              style="background: none; border: none; cursor: pointer; font-size: 14px; color: #ff82b4; padding: 2px 6px; border-radius: 6px; transition: transform 0.2s;"
+              onmouseover="this.style.transform='rotate(180deg)'"
+              onmouseout="this.style.transform='rotate(0deg)'"
+            >&#8635;</button>
           </div>
-          
-          <div class="saved-grid" id="savedOutfitsGrid">
-              </div>
-      
+
+          <div class="saved-grid" id="savedOutfitsGrid"></div>
+
+          <!-- Analytics Panel -->
           <div class="closet-insights-panel">
-              <div class="insight-stat-box">
-                  <span class="insight-value" id="insight-total-pieces">--</span>
-                  <span class="insight-label">TOTAL PIECES</span>
-              </div>
-              <div class="insight-stat-box">
-                  <span class="insight-value" id="insight-top-vibe">--</span>
-                  <span class="insight-label">FAV AESTHETIC</span>
-              </div>
+            <div class="insight-stat-box">
+              <span class="insight-value" id="insight-total-pieces">--</span>
+              <span class="insight-label">TOTAL PIECES</span>
+            </div>
+            <div class="insight-stat-box">
+              <span class="insight-value" id="insight-top-vibe">--</span>
+              <span class="insight-label">FAV AESTHETIC</span>
+            </div>
           </div>
-          
-          <button class="view-btn" onclick="window.location.href='closet.html'">VIEW ALL SAVED →</button>
-      </div>
-    </aside>
-</div>
 
+          <button class="view-btn" onclick="window.location.href='closet.html'">VIEW ALL SAVED &rarr;</button>
+        </div>
 
+      </aside>
+
+    </div><!-- /main -->
+
+    <!-- Footer -->
     <footer>
       <div>
-        <h3>fit✩check</h3>
+        <h3>fitcheck</h3>
         <p>cute fits. good vibes.</p>
         <p>made for every you.</p>
       </div>
@@ -408,7 +458,7 @@
       </div>
     </footer>
 
-  </div>
+  </div><!-- /container -->
 
   <script src="script.js"></script>
 </body>
