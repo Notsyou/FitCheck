@@ -1,3 +1,12 @@
+How to run cd to Fitcheck2 folder
+
+Make sure docker is running then run docker-compose up -d
+
+then open localhost:8080/home.html
+
+for database open localhost:8081
+
+
 How it works:
 
 Auto-Provisioning (init.sql): When you run docker-compose up, Docker looks at your init.sql file. If the database is empty, it automatically executes the code to create fashion_db and your tables. This completely removes the "manual import" step you were struggling with in phpMyAdmin.
