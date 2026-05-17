@@ -3,8 +3,23 @@
 // delete_outfit.php — BACKEND DATA PURGE PROCESSOR
 // ==========================================================================
 session_start();
+error_reporting(E_ALL);
+ini_set('display_errors', 0); // Never let PHP error HTML bleed into JSON responses
 header('Content-Type: application/json');
+
+if (!file_exists('db_connect.php')) {
+    echo json_encode(["success" => false, "message" => "db_connect.php not found"]);
+    exit;
+}
+
+ob_start(); // Buffer any accidental output from db_connect.php (warnings, notices)
 include 'db_connect.php';
+ob_end_clean(); // Discard it — only our json_encode output should reach the client
+
+if (!isset($conn) || $conn->connect_error) {
+    echo json_encode(["success" => false, "message" => "Database connection failed"]);
+    exit;
+}
 
 // Ensure the user is authenticated before dropping records
 if (!isset($_SESSION['user_id'])) {

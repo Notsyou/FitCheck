@@ -119,19 +119,92 @@ a{
     z-index: 9999;
 }
 
+.form-container1 {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0,0,0,0.45);
+  backdrop-filter: blur(8px);
+  display: none;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+}
+
+.form-box1{
+  width:380px;
+  background:#ffe6f0;
+  padding:35px;
+  border-radius:24px;
+  box-shadow:0 15px 40px rgba(0,0,0,0.18);
+  animation:popup 0.25s ease;
+  display: flex;
+  flex-direction: column;
+  gap: 25px;
+}
+
+
+/* TITLE */
+
+.form-box1 h2{
+  text-align:center;
+  margin-bottom:25px;
+  color:#ff73a8;
+  font-size:34px;
+}
+
+/* INPUTS */
+
+.form-box1 input{
+  width:100%;
+  padding:14px;
+  margin-bottom:16px;
+  border:1px solid #ddd;
+  border-radius:12px;
+  font-size:15px;
+  outline:none;
+}
+
+/* BUTTON */
+
+.form-box1 button{
+  width:100%;
+  padding:14px;
+  border:none;
+  border-radius:12px;
+  background:#ff73a8;
+  color:white;
+  font-size:16px;
+  font-weight:bold;
+  cursor:pointer;
+  transition:0.3s;
+}
+
+.form-box1 button:hover{
+  background:#eb5f96;
+}
+.right-close{
+  width: 100%;
+  display: flex;
+  justify-content: right;
+}
+.upload-close-btn{
+  right: 120px;
+  top: 15px;
+  font-size: 24px;
+  cursor: pointer;
+  color: #999;
+}
 /* POPUP CARD */
 
 .form-box{
     width:380px;
-
     background:white;
-
     padding:35px;
-
     border-radius:24px;
-
     box-shadow:0 15px 40px rgba(0,0,0,0.18);
-
     animation:popup 0.25s ease;
 }
 
@@ -139,11 +212,8 @@ a{
 
 .form-box h2{
     text-align:center;
-
     margin-bottom:25px;
-
     color:#ff73a8;
-
     font-size:34px;
 }
 
@@ -151,17 +221,11 @@ a{
 
 .form-box input{
     width:100%;
-
     padding:14px;
-
     margin-bottom:16px;
-
     border:1px solid #ddd;
-
     border-radius:12px;
-
     font-size:15px;
-
     outline:none;
 }
 
@@ -169,23 +233,14 @@ a{
 
 .form-box button{
     width:100%;
-
     padding:14px;
-
     border:none;
-
     border-radius:12px;
-
     background:#ff73a8;
-
     color:white;
-
     font-size:16px;
-
     font-weight:bold;
-
     cursor:pointer;
-
     transition:0.3s;
 }
 
@@ -530,7 +585,6 @@ a{
 .item-slot {
     background: #f8f5f2;
     border-radius: 12px;
-    padding: 15px;
     display: flex;
     align-items: center;
     justify-content: flex-start;
@@ -786,31 +840,29 @@ a{
 
 /* The Right Side Details Panel: Now stretches horizontally across the card */
 .slot-details-panel {
-  display: flex;
-  flex-direction: row;           /* ✨ Crucial: Pushes elements out horizontally */
-  justify-content: space-between; /* 💖 Badges hug the left image wall, buttons anchor the far right */
-  align-items: center;            /* Perfectly centers labels and buttons vertically */
-  width: 100%;
-  padding: 0 12px 0 4px;          /* Clean inset padding from the outer box border */
-  box-sizing: border-box;
+  display: flex; 
+  gap: 10px;      /* ✨ Crucial: Pushes elements out horizontally */
 }
 
 /* Metadata Stack: Sits directly next to the image frame */
 .badge-group {
   display: flex;
-  flex-direction: column;         /* Stacks category and vibe vertically like a spec sheet */
-  gap: 8px;                       /* Elegant spacing between the two labels */
-  align-items: flex-start;
+  flex-direction: column;    
+  justify-content: center;  
+  gap: 10px;   /* Stacks category and vibe vertically like a spec sheet */
+
 }
 
 /* Action Strip: Groups controls nicely on the far right */
 .slot-actions-row {
   display: flex;
-  flex-direction: column;         /* Stacks the shuffle dice above the remove cross */
-  gap: 12px;                      /* Symmetrical gaps between the circular buttons */
+  flex-direction: column;
   align-items: center;
+  text-align: center;
   justify-content: center;
-  margin-top: 0;                  /* Clears previous baseline alignments */
+  width: 100%;       
+  height: 100%;  /* Stacks the shuffle dice above the remove cross */
+               /* Clears previous baseline alignments */
 }
 
 /* ── Typography & Label Refinement ── */
@@ -850,7 +902,6 @@ a{
   font-weight: bold;
   cursor: pointer;
   transition: all 0.2s ease;
-  
   background-color: #ffe5e5 !important; 
   color: #ff6b6b !important;
   border: 1px solid #ffcccc !important;
@@ -858,7 +909,6 @@ a{
 
 .badge-remove:hover:not(:disabled) {
   background-color: #ffcccc !important;
-  transform: scale(1.1);
 }
 
 .badge-remove:disabled {
@@ -869,15 +919,9 @@ a{
   opacity: 0.5;
 }
 
-/* Container at the bottom right of the text panel to align actions side-by-side */
-.slot-actions-row {
-  align-self: flex-end; /* Pushes the entire control group to the right */
-  display: flex;
-  gap: 8px;             /* Clean space between shuffle and remove buttons */
-}
-
 /* The New Circular "Shuffle" Button Badge */
 .badge-shuffle {
+  align-self: flex-end; /* Snaps item to bottom right corner */
   width: 28px;
   height: 28px;
   border-radius: 50%;
@@ -888,8 +932,6 @@ a{
   font-size: 11px;
   cursor: pointer;
   transition: all 0.2s ease;
-  
-  /* Soft Pastel Sage-Green theme */
   background-color: #e2f0cb !important; 
   color: #556b2f !important;
   border: 1px solid #cce2a3 !important;
@@ -899,6 +941,13 @@ a{
   background-color: #cce2a3 !important;
   transform: scale(1.1) rotate(15deg); /* Playful shuffle rotation on hover */
 }
+/* Container at the bottom right of the text panel to align actions side-by-side */
+.slot-actions-row {
+  align-self: flex-end; /* Pushes the entire control group to the right */
+  display: flex;
+  gap: 8px;             /* Clean space between shuffle and remove buttons */
+}
+
 
 /* (slot-details-panel width is defined in its main rule above) */
 
@@ -1169,18 +1218,25 @@ footer p{
   background:#ff73a8;
   color:white;
   border:none;
-  padding:18px 35px;
+  padding:18px 1px;
   border-radius:18px;
   font-size:18px;
   font-weight:bold;
   cursor:pointer;
   transition:0.3s;
+  text-align: center;
+  width: 50%;
 }
 
 .generate-btn:hover{
   background:#e45d95;
 }
 
+.hero-carousel-section{
+  background: #fdeff4;
+  border-radius: 8px;
+  border: 3px dashed #f7d2df;
+}
 /* PLACEHOLDER */
 
 .placeholder{
@@ -1205,6 +1261,7 @@ footer p{
 /* HOW IT WORKS */
 
 .how-it-works{
+  margin-top: 30px;
   background:#ffe5ef;
   padding:50px 60px;
 }
@@ -1464,7 +1521,7 @@ footer p{
 .sidebar-item-img {
   width: 100%;
   height: 120px; /* Matches parent slot explicit height */
-  object-fit: cover !important; /* Crops cleanly, no squishing regardless of source proportions */
+  object-fit: contain !important; /* Crops cleanly, no squishing regardless of source proportions */
   display: block;
 }
 
@@ -1771,9 +1828,17 @@ footer p{
     height: 80px;
     min-height: 80px;
   }
-
+  .item-slot{
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    display: flex;
+  }
   .sidebar-item-img {
-    height: 80px;
+    width: 100%;
+    height: 80px; /* Matches parent slot explicit height */
+    object-fit: contain !important; /* Crops cleanly, no squishing regardless of source proportions */
+    display: block;
   }
 
   /* ── Vibe list horizontal scroll on mobile ── */
@@ -1928,43 +1993,26 @@ footer p{
   box-shadow: 0 6px 16px rgba(255, 115, 168, 0.1);
 }
 
-/* Horizontal collection array row for the mini outfit thumbnail previews */
-.saved-card-thumbs {
-  display: flex;
-  flex-direction: row;
-  gap: 4px;
-  justify-content: flex-start;
-  align-items: center;
-  height: 95px;
+/* ── Minimalist placeholder body frame (mirrors main closet card design) ── */
+.closet-card-body-wrapper {
+  flex: 1;                    /* Fills vertical space between card top and footer */
   width: 100%;
-  overflow: hidden;
-  background: #faf6f3;
-  border-radius: 10px;
-  padding: 4px;
-}
-
-/* Micro thumbnail graphic profiles */
-.saved-thumb {
-  flex: 1;
-  width: 100%;
-  height: 100%;
-  object-fit: cover !important; /* Crops image cleanly inside mini cells */
-  border-radius: 6px;
-  border: 1px solid #f0e6df;
-  background: white;
-}
-
-/* Fallback structural string handling profiles */
-.saved-thumb-empty {
-  flex: 1;
-  height: 100%;
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #ccc;
-  font-size: 14px;
-  background: #fdfaf8;
-  border-radius: 6px;
+  background: #faf6f3;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+/* Centered dress emoji icon — scales proportionally inside sidebar columns */
+.closet-dress-icon-container {
+  font-size: 36px;            /* Slightly smaller than main closet cards to fit narrow grid */
+  line-height: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  user-select: none;
 }
 
 /* Card naming layout description text strip */

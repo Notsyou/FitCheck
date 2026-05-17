@@ -42,7 +42,7 @@ function showLoginFromLock()  { showLogin();  }
 function showSignupFromLock() { showSignup(); }
 
 function logout() {
-    fetch("Logout.php", { credentials: "include" })
+    fetch("logout.php", { credentials: "include" })
     .then(() => {
         localStorage.removeItem("isLoggedIn");
         alert("Logged out successfully! See you next time. 👋");
@@ -153,12 +153,7 @@ function loadClosetItems() {
                 myClosetItems = items;
                 renderSidebarCategories();
                 renderGeneratorSlots();
-                if (!items.error) {
-                    myClosetItems = items;
-                    renderSidebarCategories();
-                    renderGeneratorSlots();
-                    calculateClosetInsights(); // ✨ Add this right here!
-                }
+                calculateClosetInsights();
             }
         })
         .catch(console.error);
@@ -585,23 +580,14 @@ function renderSavedOutfits(outfits) {
     let finalHtml = "";
 
     displayedOutfits.forEach((outfit, i) => {
-        const thumbs = ["hat_image", "top_image", "bottom_image", "accessories_image", "footwear_image"]
-            .map(k => outfit[k])
-            .filter(Boolean)
-            .slice(0, 3);
-
-        const thumbHTML = thumbs.length > 0
-            ? thumbs.map(src => `<img src="${src.replace(/\\/g, '/')}" class="saved-thumb" />`).join("")
-            : `<span class="saved-thumb-empty">—</span>`;
-
         const safeOutfitJson = btoa(JSON.stringify(outfit));
 
-        // 🔥 THE FIX: We are explicitly injecting the HTML button node directly into the template string!
-        // event.stopPropagation() is crucial here so clicking '×' deletes the item instead of loading it into the generator.
         finalHtml += `
             <div class="saved-card-new" onclick="loadSavedOutfitToGenerator('${safeOutfitJson}')" style="cursor: pointer; position: relative;">
                 <button class="delete-saved-btn" onclick="confirmDeleteSavedOutfit(${outfit.id}, '${outfit.label.replace(/'/g, "\\'")}', event)" title="Delete Outfit">×</button>
-                <div class="saved-card-thumbs">${thumbHTML}</div>
+                <div class="closet-card-body-wrapper">
+                    <div class="closet-dress-icon-container">👗</div>
+                </div>
                 <div class="saved-card-footer">
                     <span class="saved-card-label">${outfit.label || 'Outfit ' + (i + 1)}</span>
                     <span class="saved-card-num">#${i + 1}</span>
@@ -617,8 +603,8 @@ function renderSavedOutfits(outfits) {
         for (let i = currentOutfitsCount; i < totalSlotsNeeded; i++) {
             finalHtml += `
                 <div class="saved-card-new placeholder-slot-card" style="opacity: 0.65; border-style: dashed; cursor: default;">
-                    <div class="saved-card-thumbs" style="justify-content: center; background: #faf8f6;">
-                        <span style="font-size: 20px; color: #ffccd8;">♡</span>
+                    <div class="closet-card-body-wrapper" style="background: #faf8f6;">
+                        <div class="closet-dress-icon-container" style="opacity: 0.35;">♡</div>
                     </div>
                     <div class="saved-card-footer">
                         <span class="saved-card-label" style="color: #bbb; font-style: italic;">Empty Slot</span>

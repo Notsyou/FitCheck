@@ -22,8 +22,9 @@
 
   <div id="uploadWizardContainer" class="form-container">
   <div class="form-box upload-wizard-box">
-    <span class="close-btn" onclick="closeUploadWizard()">&times;</span>
-    
+    <div class="right-close">
+    <span class="upload-close-btn" onclick="closeUploadWizard()">&times;</span>
+  </div>
     <div id="uploadStep1" class="wizard-step active-step">
       <h2>Upload Piece</h2>
       <div class="drag-drop-zone" onclick="triggerFileInput()">
@@ -99,13 +100,13 @@
 </div>
 
   <!-- ── Save Outfit Modal ─────────────────────── -->
-  <div class="form-container" id="saveOutfitModal" style="display:none;">
-    <div class="form-box" style="max-width:360px; gap:12px;">
-      <h2>name your fit ✨</h2>
-      <p>Give this outfit a name so you remember it!</p>
+  <div class="form-container1" id="saveOutfitModal" style="display:none;">
+    <div class="form-box1" style="max-width:360px; gap:12px;">
+      <h2>Name your fit!</h2>
+      <p>Give this outfit a name so you remember it later!</p>
       <input type="text" id="outfitNameInput" class="form-input" placeholder="e.g. Casual Chic, Date Night..." maxlength="60" onkeydown="if(event.key==='Enter') confirmSaveOutfit();" />
-      <button type="button" class="form-submit-btn" onclick="confirmSaveOutfit()">SAVE OUTFIT 💖</button>
-      <button type="button" class="form-close-btn" onclick="closeSaveOutfitModal()">✕</button>
+      <button type="button" class="form-submit-btn1" onclick="confirmSaveOutfit()">SAVE OUTFIT</button>
+      <button type="button" class="form-close-btn1" onclick="closeSaveOutfitModal()">CLOSE</button>
     </div>
   </div>
 
@@ -237,8 +238,8 @@
 
     <section class="center">
         <div class="hero-text">
-            <h1>your outfit.</h1>
-            <h2>your way.</h2>
+            <h1><b>Your</b> Outfit.</h1>
+            <h2>Your <b>Way</b>.</h2>
         </div>
 
 <div class="outfit-generator-card">
@@ -267,7 +268,7 @@
                           </div>
                           <div class="slot-actions-row">
                               <button class="badge-shuffle" id="shuffle-btn-hat" onclick="randomizeSingleSlot('hat'); event.stopPropagation();" title="Shuffle Hat">🎲</button>
-                              <button class="badge-remove" id="remove-btn-hat" onclick="removeFromGenerator('hat'); event.stopPropagation();" disabled>×</button>
+                              <button class="badge-remove" id="remove-btn-hat" onclick="removeFromGenerator('hat'); event.stopPropagation();" disabled>X</button>
                           </div>
                       </div>
                   </div>
@@ -283,7 +284,7 @@
                           </div>
                           <div class="slot-actions-row">
                               <button class="badge-shuffle" id="shuffle-btn-top" onclick="randomizeSingleSlot('top'); event.stopPropagation();" title="Shuffle Top">🎲</button>
-                              <button class="badge-remove" id="remove-btn-top" onclick="removeFromGenerator('top'); event.stopPropagation();" disabled>×</button>
+                              <button class="badge-remove" id="remove-btn-top" onclick="removeFromGenerator('top'); event.stopPropagation();" disabled>X</button>
                           </div>
                       </div>
                   </div>
@@ -299,7 +300,7 @@
                           </div>
                           <div class="slot-actions-row">
                               <button class="badge-shuffle" id="shuffle-btn-bottom" onclick="randomizeSingleSlot('bottom'); event.stopPropagation();" title="Shuffle Bottom">🎲</button>
-                              <button class="badge-remove" id="remove-btn-bottom" onclick="removeFromGenerator('bottom'); event.stopPropagation();" disabled>×</button>
+                              <button class="badge-remove" id="remove-btn-bottom" onclick="removeFromGenerator('bottom'); event.stopPropagation();" disabled>X</button>
                           </div>
                       </div>
                   </div>
@@ -315,7 +316,7 @@
                           </div>
                           <div class="slot-actions-row">
                               <button class="badge-shuffle" id="shuffle-btn-accessories" onclick="randomizeSingleSlot('accessories'); event.stopPropagation();" title="Shuffle Accessories">🎲</button>
-                              <button class="badge-remove" id="remove-btn-accessories" onclick="removeFromGenerator('accessories'); event.stopPropagation();" disabled>×</button>
+                              <button class="badge-remove" id="remove-btn-accessories" onclick="removeFromGenerator('accessories'); event.stopPropagation();" disabled>X</button>
                           </div>
                       </div>
                   </div>
@@ -331,7 +332,7 @@
                           </div>
                           <div class="slot-actions-row">
                               <button class="badge-shuffle" id="shuffle-btn-footwear" onclick="randomizeSingleSlot('footwear'); event.stopPropagation();" title="Shuffle Footwear">🎲</button>
-                              <button class="badge-remove" id="remove-btn-footwear" onclick="removeFromGenerator('footwear'); event.stopPropagation();" disabled>×</button>
+                              <button class="badge-remove" id="remove-btn-footwear" onclick="removeFromGenerator('footwear'); event.stopPropagation();" disabled>X</button>
                           </div>
                       </div>
                   </div>

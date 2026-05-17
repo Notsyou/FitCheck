@@ -5,12 +5,14 @@
 // =============================================
 
 
-// ── Global State ──────────────────────────────
+// =============================================
+// closet.js — Auth & Modal Controls
+// Replicated exactly from script.js 🔒
+// =============================================
+
 let allSavedOutfits   = [];
-let activeOutfitId    = null;   // ID of the outfit currently shown in the viewport
+let activeOutfitId    = null; 
 
-
-// ── Mobile Nav Toggle ─────────────────────────
 function toggleMobileNav() {
     const navLinks = document.getElementById("navLinks");
     const btn      = document.getElementById("hamburgerBtn");
@@ -18,26 +20,25 @@ function toggleMobileNav() {
     if (btn)      btn.classList.toggle("is-open");
 }
 
-
-// ── Navbar Auth State ─────────────────────────
 function updateNavbar() {
     const authButtons = document.getElementById("authButtons");
     const isLoggedIn  = localStorage.getItem("isLoggedIn") === "true";
+    const lock        = document.getElementById("closetLock"); // Your lock container ID
 
     if (authButtons) {
         if (isLoggedIn) {
             authButtons.innerHTML = `<button class="logout-btn" onclick="logout()">LOG OUT</button>`;
+            if (lock) lock.style.display = "none";
         } else {
             authButtons.innerHTML = `
-                <button class="logout-btn"  onclick="showLogin()">LOGIN</button>
-                <button class="signup-btn"  onclick="showSignup()">SIGN UP</button>
+                <button class="logout-btn" onclick="showLogin()">LOGIN</button>
+                <button class="signup-btn" onclick="showSignup()">SIGN UP</button>
             `;
+            if (lock) lock.style.display = "flex";
         }
     }
 }
 
-
-// ── Auth Popups ───────────────────────────────
 function showLogin() {
     document.getElementById("loginContainer").style.display  = "flex";
     document.getElementById("signupContainer").style.display = "none";
@@ -49,19 +50,27 @@ function showSignup() {
 }
 
 function closePopups() {
+    const isLoggedIn = localStorage.getItem("isLoggedIn") === "true";
+    // 🚀 CRITICAL: If logged out, they CANNOT close the popup to look at the page
+    if (!isLoggedIn) {
+        showLogin();
+        return;
+    }
     document.getElementById("loginContainer").style.display  = "none";
     document.getElementById("signupContainer").style.display = "none";
 }
 
 window.onclick = function (event) {
+    const isLoggedIn  = localStorage.getItem("isLoggedIn") === "true";
+    // 🚀 CRITICAL: If logged out, disable backdrop clicking completely
+    if (!isLoggedIn) return;
+
     const loginPopup  = document.getElementById("loginContainer");
     const signupPopup = document.getElementById("signupContainer");
     if (event.target === loginPopup)  loginPopup.style.display  = "none";
     if (event.target === signupPopup) signupPopup.style.display = "none";
 };
 
-
-// ── AJAX Auth Handlers ─────────────────────────
 function login() {
     const username = document.getElementById("loginUsername").value;
     const password = document.getElementById("loginPassword").value;
@@ -76,8 +85,8 @@ function login() {
         .then(data => {
             if (data.success) {
                 localStorage.setItem("isLoggedIn", "true");
-                closePopups();
                 updateNavbar();
+                closePopups();
                 loadAllOutfits();
             } else {
                 alert(data.message || "Login failed. Please try again.");
@@ -100,8 +109,8 @@ function signup() {
         .then(data => {
             if (data.success) {
                 localStorage.setItem("isLoggedIn", "true");
-                closePopups();
                 updateNavbar();
+                closePopups();
                 loadAllOutfits();
             } else {
                 alert(data.message || "Sign up failed. Please try again.");
@@ -111,7 +120,7 @@ function signup() {
 }
 
 function logout() {
-    fetch("Logout.php", { credentials: "include" })
+    fetch("logout.php", { credentials: "include" })
         .then(() => {
             localStorage.removeItem("isLoggedIn");
             window.location.href = "home.html";
@@ -166,21 +175,9 @@ function renderOutfitsGrid(outfits) {
 
     grid.innerHTML = outfits.map((outfit, i) => {
 
-        // Collect up to 3 thumbnail images from the five piece slots
-        const thumbKeys = ["hat_image", "top_image", "bottom_image", "accessories_image", "footwear_image"];
-        const thumbSrcs = thumbKeys
-            .map(k => outfit[k])
-            .filter(Boolean)
-            .slice(0, 3);
-
-        const thumbsHTML = thumbSrcs.length > 0
-            ? thumbSrcs.map(src =>
-                `<img src="${src.replace(/\\/g, '/')}" class="closet-thumb" alt="piece" />`
-              ).join("")
-            : `<span class="closet-thumb-empty">—</span>`;
-
-        // Piece count badge
-        const pieceCount = thumbKeys.filter(k => outfit[k]).length;
+        // Piece count — derived from the five piece slots; no image paths touched
+        const pieceKeys  = ["hat_image", "top_image", "bottom_image", "accessories_image", "footwear_image"];
+        const pieceCount = pieceKeys.filter(k => outfit[k]).length;
 
         const isActive = outfit.id === activeOutfitId ? "closet-card-active" : "";
 
@@ -188,19 +185,13 @@ function renderOutfitsGrid(outfits) {
             <div
                 class="closet-outfit-card ${isActive}"
                 id="closet-card-${outfit.id}"
-                onclick="previewOutfit(${outfit.id})"
+                onclick="previewOutfit(parseInt(${outfit.id}, 10))"
                 title="Preview outfit"
             >
-                <!-- Hover delete button -->
-                <button
-                    class="closet-delete-btn"
-                    onclick="event.stopPropagation(); confirmDeleteOutfit(${outfit.id}, '${(outfit.label || '').replace(/'/g, "\\'")}')"
-                    title="Delete outfit"
-                    aria-label="Delete ${outfit.label || 'outfit'}"
-                >✕</button>
-
-                <!-- Thumbnail strip -->
-                <div class="closet-thumbs-strip">${thumbsHTML}</div>
+                <!-- Minimalist boutique placeholder — no dynamic images, no inline delete -->
+                <div class="closet-card-body-wrapper">
+                    <div class="closet-dress-icon-container">👗</div>
+                </div>
 
                 <!-- Card footer -->
                 <div class="closet-card-footer">
@@ -215,7 +206,8 @@ function renderOutfitsGrid(outfits) {
 
 // ── Avatar Viewport: Preview Selected Outfit ──
 function previewOutfit(outfitId) {
-    const outfit = allSavedOutfits.find(o => o.id === outfitId);
+    outfitId = parseInt(outfitId, 10); // normalise — PHP JSON ids may arrive as strings
+    const outfit = allSavedOutfits.find(o => parseInt(o.id, 10) === outfitId);
     if (!outfit) return;
 
     activeOutfitId = outfitId;
@@ -288,6 +280,23 @@ function previewOutfit(outfitId) {
         void layers.offsetWidth; // Reflow to restart animation
         layers.classList.add("avatar-fade-in");
     }
+
+    // Activate the global delete button now that an outfit is selected
+    const globalDeleteBtn = document.getElementById("globalDeleteBtn");
+    if (globalDeleteBtn) globalDeleteBtn.disabled = false;
+}
+
+
+// ── Delete: Global Trigger ───────────────────
+function deleteActiveOutfit() {
+    if (!activeOutfitId) return;
+    const outfit = allSavedOutfits.find(o => parseInt(o.id, 10) === parseInt(activeOutfitId, 10));
+    const name = outfit ? (outfit.label || `Outfit #${activeOutfitId}`) : "this outfit";
+
+    const confirmed = confirm(`Are you sure you want to permanently delete "${name}"? 🗑️`);
+    if (!confirmed) return;
+
+    deleteOutfit(activeOutfitId);
 }
 
 
@@ -333,13 +342,17 @@ function transitionCardOut(outfitId) {
         card.addEventListener("animationend", () => {
             card.remove();
             // Remove from in-memory state
-            allSavedOutfits = allSavedOutfits.filter(o => o.id !== outfitId);
+            allSavedOutfits = allSavedOutfits.filter(o => parseInt(o.id, 10) !== parseInt(outfitId, 10));
             updateOutfitCount(allSavedOutfits.length);
 
             // If the deleted outfit was the one being previewed, reset the viewport
-            if (activeOutfitId === outfitId) {
-                resetViewport();
+            if (parseInt(activeOutfitId, 10) === parseInt(outfitId, 10)) {
+                resetViewport(); // also disables globalDeleteBtn via resetViewport()
             }
+
+            // Ensure delete button is disabled after any deletion
+            const globalDeleteBtn = document.getElementById("globalDeleteBtn");
+            if (globalDeleteBtn) globalDeleteBtn.disabled = true;
 
             // Show empty state if the grid is now clear
             if (allSavedOutfits.length === 0) {
@@ -348,7 +361,7 @@ function transitionCardOut(outfitId) {
         }, { once: true });
     } else {
         // No card element (shouldn't happen) — just update state
-        allSavedOutfits = allSavedOutfits.filter(o => o.id !== outfitId);
+        allSavedOutfits = allSavedOutfits.filter(o => parseInt(o.id, 10) !== parseInt(outfitId, 10));
         updateOutfitCount(allSavedOutfits.length);
     }
 }
@@ -367,6 +380,10 @@ function resetViewport() {
     if (layers) layers.style.display = "none";
     if (meta)   meta.style.display   = "none";
     if (label)  label.textContent    = "Select a fit to preview";
+
+    // No outfit selected — disable the global delete trigger
+    const globalDeleteBtn = document.getElementById("globalDeleteBtn");
+    if (globalDeleteBtn) globalDeleteBtn.disabled = true;
 }
 
 
@@ -400,30 +417,26 @@ document.addEventListener("DOMContentLoaded", function () {
     // during development so the UI layout stays visible for debugging.
     // Swap the console.warn lines back to window.location.href = "home.html"
     // when deploying to production.
+    const lock = document.getElementById("closetLock");
+
     fetch("check_session.php", { credentials: "include" })
         .then(r => r.json())
         .then(data => {
             if (data.isLoggedIn) {
-                // Sync localStorage with the confirmed server session state,
-                // then repaint the navbar in case localStorage was stale
                 localStorage.setItem("isLoggedIn", "true");
+                if (lock) lock.style.display = "none";
                 updateNavbar();
                 loadAllOutfits();
             } else {
                 localStorage.removeItem("isLoggedIn");
-                // DEV MODE: log instead of redirect so the layout stays visible
-                console.warn("[closet.js] Session check returned isLoggedIn: false. " +
-                    "In production, this would redirect to home.html. " +
-                    "Response received:", data);
-                updateNavbar(); // Repaint to logged-out state
+                if (lock) lock.style.display = "flex";
+                updateNavbar();
             }
         })
         .catch(err => {
-            // DEV MODE: log the raw error instead of silently redirecting
-            console.error("[closet.js] check_session.php fetch failed. " +
-                "Check that the api/ subfolder is accessible and session_start() " +
-                "is at the top of check_session.php. Raw error:", err);
+            console.error("[closet.js] check_session.php fetch failed:", err);
             localStorage.removeItem("isLoggedIn");
+            if (lock) lock.style.display = "flex";
             updateNavbar();
         });
 });

@@ -1,6 +1,6 @@
 <?php
 session_start();
-// get_saved_outfits.php — returns the 6 most recent saved outfits for the sidebar
+// get_saved_outfits.php — returns all saved outfits for the logged-in user
 
 error_reporting(E_ALL);
 ini_set('display_errors', 0);
@@ -43,7 +43,7 @@ try {
         LEFT JOIN closet_items foot ON so.footwear_id    = foot.id
         WHERE so.user_id = ?
         ORDER BY so.created_at DESC
-        LIMIT 6
+        LIMIT 200
     ";
 
     $stmt = $conn->prepare($sql);
